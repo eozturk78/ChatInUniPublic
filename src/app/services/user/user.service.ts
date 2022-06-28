@@ -174,8 +174,6 @@ export class UserService {
           this.errorMessage.onShowErrorMessage(error);
         });
   }
-
-
   // -- StatusList EndPoint
   getStatusList() {
     const methodUrl = this.serviceBaseUrl + Consts.getStatusList;
