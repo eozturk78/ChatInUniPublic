@@ -1,0 +1,53 @@
+<div class="content" role="main">
+
+  <div class="row">
+    <div class="col-sm-6 offset-sm-3">
+      <form *ngIf="!baseCtrl.savedSuccessFully">
+        <div class="form-group">
+          <label translate="email"></label>
+          <input type="email" [(ngModel)]="userService.signUpForm.Email.Value" name="email" class="form-control"
+                 [ngClass]="{'error-field': baseCtrl.checkField(userService.signUpForm.Email) && submitted}">
+          <div *ngIf="baseCtrl.checkField(userService.signUpForm.Email) && submitted"
+               class="error-required" translate="field_required">
+          </div>
+        </div>
+        <div class="form-group">
+          <label translate="user_name"></label>
+          <input type="text" ngModel name="userName" [(ngModel)]="userService.signUpForm.UserName.Value"
+                 [ngClass]="{'error-field': baseCtrl.checkField(userService.signUpForm.UserName) && submitted}"
+                 class="form-control">
+          <div *ngIf="baseCtrl.checkField(userService.signUpForm.UserName) && submitted"
+               class="error-required" translate="field_required">
+          </div>
+        </div>
+        <div class="form-group">
+          <label translate="password"></label>
+          <input type="password" ngModel name="password" [(ngModel)]="userService.signUpForm.Password.Value"
+                 [ngClass]="{'error-field': baseCtrl.checkField(userService.signUpForm.Password) && submitted}"
+                 class="form-control">
+          <div *ngIf="baseCtrl.checkField(userService.signUpForm.Password) && submitted"
+               class="error-required" translate="field_required">
+          </div>
+        </div>
+        <div class="form-group">
+          <label translate="status"></label>
+          <select class="form-control" ngModel [(ngModel)]="userService.signUpForm.StatusId.Value"
+                  name="status"
+                  [ngClass]="{'error-field': baseCtrl.checkField(userService.signUpForm.StatusId) && submitted}">
+            <option *ngFor="let status of userService.statusObject.Statuses.Value" value="{{status.StatusId.Value}}">{{status.StatusName.Value}}</option>
+          </select>
+          <div *ngIf="baseCtrl.checkField(userService.signUpForm.StatusId) && submitted"
+               class="error-required" translate="field_required">
+          </div>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-danger" translate="send" (click)="onSubmit()"></button>
+        </div>
+      </form>
+      <div *ngIf="baseCtrl.savedSuccessFully" class="text-center">
+        <span translate="sign_up_successfull"></span>
+      </div>
+
+    </div>
+  </div>
+</div>

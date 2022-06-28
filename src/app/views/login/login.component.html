@@ -1,0 +1,33 @@
+<div class="content" role="main">
+  <div class="row">
+    <div class="col-sm-6 offset-sm-3">
+      <form>
+        <div class="form-group">
+          <label translate="user_name"></label>
+          <input type="text" ngModel name="userName" [(ngModel)]="userService.loginForm.UserName.Value"
+                 [ngClass]="{'error-field': baseCtrl.checkField(userService.loginForm.UserName) && submitted}"
+                 class="form-control">
+          <div *ngIf="baseCtrl.checkField(userService.loginForm.UserName) && submitted"
+               class="error-required" translate="field_required">
+          </div>
+        </div>
+        <div class="form-group">
+          <label translate="password"></label>
+          <input type="password" ngModel name="password" [(ngModel)]="userService.loginForm.Password.Value"
+                 [ngClass]="{'error-field': baseCtrl.checkField(userService.loginForm.Password) && submitted}"
+                 class="form-control">
+          <div *ngIf="baseCtrl.checkField(userService.loginForm.Password) && submitted"
+               class="error-required" translate="field_required">
+          </div>
+        </div>
+        <div class="form-group">
+          <a translate="i_forgot_password" (click)="onOpenForgotPassword()" style="cursor: pointer"></a>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-danger" translate="send" (click)="onSubmit()"></button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

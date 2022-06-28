@@ -1,0 +1,29 @@
+<div class="content" role="main">
+
+  <a (click)="onShuffle()" style="cursor: pointer" translate="shuffle"></a><br><br>
+  <div *ngFor="let act of userService.activeUsers.Records.Value">
+    <a href="/{{base.pageLanguage}}/user-profile-detail/{{act.UserName.Value}}">
+      <div class="profile-img">
+        <img *ngIf="act.ProfilePhotos.Value!=null" [src]="act.ProfilePhotos.Value[0].FileURL.Value"
+             [ngbTooltip]="act.UserName.Value">
+        <img *ngIf="act.ProfilePhotos.Value==null" src="../../../assets/image/profile-place-holder.jpg"
+             [ngbTooltip]="act.UserName.Value">
+        <div *ngIf="act.StatusIcon.Value!=null" class="status-icon-container">
+          <img [src]="act.StatusIcon.Value">
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="status-list-box" [@openClose]="isOpen ? 'open' : 'closed'">
+    <div *ngFor="let status of userService.statusList" (click)="onChooseStatus(status)" style="cursor: pointer">
+      <img *ngIf="status.FileUrl!=null" [src]="status.FileUrl" style="width: 40px; height: 40px"> {{status.StatusText}}
+    </div>
+  </div>
+  <div class="main-status-circle" (click)="onOpenStatusBox()">
+    <div class="display-table-cell">
+      <div *ngIf="chosenStatus!=null">
+        <img *ngIf="chosenStatus.FileUrl!=null" [src]="chosenStatus.FileUrl"  style="width: 40px; height: 40px">
+      </div>
+    </div>
+  </div>
+</div>

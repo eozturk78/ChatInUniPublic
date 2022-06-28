@@ -1,0 +1,21 @@
+<div class="content" role="main">
+
+  <div class="media">
+    <div class="media-body">
+      <h5 class="mt-0">{{userService.userProfileDetail.UserName.Value}}</h5>
+      {{userService.userProfileDetail.StatusText.Value}}
+    </div>
+  </div>
+  <hr>
+  <div *ngFor="let p of userService.userProfileDetail.ProfilePhotos.Value">
+    <div class="profile-img">
+      <img src="{{p.FileURL.Value}}" width="100" height="100">
+    </div>
+  </div>
+  <form>
+    <div class="form-group">
+      <input [(ngModel)]="message" class="form-control" (keydown.enter)="onSendMessage()" name="message" required="required">
+    </div>
+    <button (click)="onSendMessage()" class="btn btn-danger" translate="send_message"></button>
+  </form>
+</div>

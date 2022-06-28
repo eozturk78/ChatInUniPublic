@@ -1,0 +1,16 @@
+<ngb-alert
+  @inOutPaneAnimation
+  type="success"
+  *ngIf="baseCtrl.savedSuccessFully==true"
+  (close)="baseCtrl.savedSuccessFully = false">
+  <h4><span translate="success"></span></h4>
+  <span translate="successfully_saved"></span>
+</ngb-alert>
+<ngb-alert
+  @inOutPaneAnimation
+  type="danger"
+  *ngIf="onCheckExistError()"
+  (close)="onCloseError()">
+  <h4><span translate="error"></span></h4>
+  <span>{{onGetError()}}</span>
+</ngb-alert>

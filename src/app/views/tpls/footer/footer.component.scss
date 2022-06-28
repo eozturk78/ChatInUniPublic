@@ -1,0 +1,27 @@
+@import "variables";
+
+footer {
+  width: 100%;
+  background-color: #f8f9fa !important;
+}
+
+footer nav {
+  margin: 25px !important;
+}
+
+footer nav ul {
+  margin-bottom: 0 !important;
+  justify-content: space-between;
+}
+
+footer nav ul li {
+  display: inline-block;
+  width: auto;
+  min-width: 100px;
+  font-weight: 600;
+  margin: 0px 10px 0px 0px;
+}
+
+footer nav ul li a {
+  color: #24292e;
+}

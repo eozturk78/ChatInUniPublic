@@ -1,0 +1,33 @@
+<div class="content landing-content">
+  <div class="landing-top text-center">
+    <div class="landing-text-container">
+      <div class="display-table-cell">
+        <div class="landing-text">
+          <h1 style="color: white; opacity: 1" translate="landing_text"></h1></div>
+      </div>
+    </div>
+    <a translate="start_chating" href="{{baseCtrl.getLanguage() }}/active-users" class="btn btn-dark btn-start-chating">
+    </a>
+  </div>
+  <br>
+  <div class="col-lg-8 offset-lg-2">
+    <div class="row">
+      <div class="col-lg-4 col-md-6 col-sm-6" *ngFor="let blog of userService.blogObject.Records.Value">
+        <div class="blog-block">
+          <a href="{{baseCtrl.pageLanguage}}/blog/{{blog.Url.Value}}" target="_blank">
+            <div class="blog-image">
+              <div class="display-table-cell">
+                <span>ChatInUni</span>
+              </div>
+            </div>
+            <div class="block-content">
+              <h6>{{blog.CreatedDate.Value | date:'dd/MM/yy'}}</h6>
+              <h6>{{blog.Title.Value}}</h6>
+              <p [innerHTML]="blog.Body.Value | slice:0:250"></p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

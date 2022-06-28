@@ -1,0 +1,68 @@
+<div class="content" role="main">
+
+  <div class="row">
+    <div class="col-sm-6 offset-sm-3">
+      <form>
+        <div class="form-group">
+          <label translate="email"></label>
+          <input type="email" [(ngModel)]="userService.profileForm.Email.Value" name="email" class="form-control"
+                 [ngClass]="{'error-field': baseCtrl.checkField(userService.profileForm.Email) && submitted}">
+          <div *ngIf="baseCtrl.checkField(userService.profileForm.Email) && submitted"
+               class="error-required" translate="field_required">
+          </div>
+        </div>
+        <div class="form-group">
+          <label translate="user_name"></label>
+          <input type="text" ngModel name="userName" [(ngModel)]="userService.profileForm.UserName.Value"
+                 [ngClass]="{'error-field': baseCtrl.checkField(userService.profileForm.UserName) && submitted}"
+                 class="form-control">
+          <div *ngIf="baseCtrl.checkField(userService.profileForm.UserName) && submitted"
+               class="error-required" translate="field_required">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label translate="status"></label>
+          <select class="form-control" ngModel [(ngModel)]="userService.profileForm.StatusId.Value"
+                  name="status"
+                  [ngClass]="{'error-field': baseCtrl.checkField(userService.profileForm.StatusId) && submitted}">
+            <option *ngFor="let status of userService.statusObject.Statuses.Value"
+                    value="{{status.StatusId.Value}}">{{status.StatusName.Value}}</option>
+          </select>
+          <div *ngIf="baseCtrl.checkField(userService.profileForm.StatusId) && submitted"
+               class="error-required" translate="field_required">
+          </div>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-danger" translate="send" (click)="onSubmit()"></button>
+        </div>
+      </form>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <input type="file" id="uploadedPhoto" style="display: none"
+                 (change)="readThis($event)" multiple>
+          <div class="upload-photo text-right" (click)="onOpenChoosePhotoDialog()"><i class="fa fa-plus"></i> <span
+            translate="upload_photo"></span></div>
+          <hr>
+          <div *ngFor="let p of userService.profileForm.ProfilePhotos.Value">
+            <div class="profile-img">
+              <img src="{{p.FileURL.Value}}" width="100" height="100">
+              <div translate="delete" (click)="deleteProfilePhoto(p)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="main-status-circle" (click)="onLogout()">
+    <div class="display-table-cell">
+
+      <i class="fa fa-sign-out" aria-hidden="true"></i>
+
+    </div>
+  </div>
+</div>

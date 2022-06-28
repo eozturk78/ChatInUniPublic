@@ -1,0 +1,46 @@
+<div class="content" role="main" style="padding: 0px !important;">
+  <div class="chat-container">
+    <div class="chat-header">
+
+      <div class="chat-header-title"></div>
+      <div class="chat-header-user">
+        <span *ngIf="userService.chosenInbox!=null">
+          <i class="fa fa-angle-left"
+             (click)="onTurnToMessageList()"></i>&nbsp;&nbsp;{{userService.chosenInbox.ChatCreatedUserName  | slice:0:10}}</span>
+        <div class="delete-button" *ngIf="userService.chosenInbox!=null">
+          <div class="display-table-cell">
+            ...
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chat-sender-container" #chatSender>
+      <div *ngFor="let ib of userService.inbox" class="chat-user-info-container" (click)="onChooseUser(ib)"
+           [ngClass]="{'bg-chosen-chat': ib.ChatId == userService.chosenInbox?.ChatId}">
+        <div class="image-txt-container">
+          <div class="profile-img"><img src="../../../assets/image/profile-place-holder.jpg"></div>
+          <b>{{ib.ChatCreatedUserName | slice:0:10}}</b>
+        </div>
+      </div>
+    </div>
+    <div class="chat-message-container" [@slideLeftToRight]="isMobile ? (open ? 'right': 'left'): null"
+         (@slideLeftToRight.done)="animationDone()"
+    >
+      <div class="chat-message-list-container" id="chatBox">
+        <div *ngFor="let mes of userService.chosenInbox?.Messages; let last = last" class="message-container"
+             [ngClass]="{'to-message-container':mes.IsFromLoggedUser,'from-message-container':!mes.IsFromLoggedUser}"
+             [attr.ready]="last && gotoEndOfToScreen()">
+          {{mes.Message}}
+        </div>
+      </div>
+      <div class="input-container" *ngIf="userService.chosenInbox!=null">
+        <form>
+          <input [(ngModel)]="message" class="form-control" (keydown.enter)="onSendMessage()" name="message"
+                 placeholder="{{'type_a_message' | translate}}"
+                 required="required">
+          <i class="fas fa-paper-plane" (click)="onSendMessage()"></i>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
