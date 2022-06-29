@@ -235,6 +235,7 @@ export class UserService {
       .subscribe((resp: any) => {
           const data = this.serviceConnectionService.parseDataToJsonDetails(resp);
           this.inbox = data.Records;
+          console.log(JSON.stringify(data.Records))
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -244,6 +245,17 @@ export class UserService {
   // -- deleteChat EndPoint
   deleteChat(params: any) {
     const methodUrl = this.serviceBaseUrl + Consts.deleteChat + "/" + params.ChatId;
+    this.serviceConnectionService.serviceConnection(methodUrl, params, Enums.MethodType.POST)
+      .subscribe((resp: any) => {
+
+        },
+        (error: any) => {
+          this.errorMessage.onShowErrorMessage(error);
+        });
+  }
+  // -- blockUserByUser EndPoint
+    blockUserByUser(params: any) {
+    const methodUrl = this.serviceBaseUrl + Consts.blockUserByUser;
     this.serviceConnectionService.serviceConnection(methodUrl, params, Enums.MethodType.POST)
       .subscribe((resp: any) => {
 

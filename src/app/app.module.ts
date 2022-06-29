@@ -18,6 +18,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {Consts} from "./models/consts/consts";
 import {FooterComponent} from './views/tpls/footer/footer.component';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -43,11 +44,11 @@ import {MatMenuModule} from '@angular/material/menu';
     }),
     NgbModule,
     ModalModule.forRoot(),
-    BrowserAnimationsModule,
-    MatMenuModule
+    BrowserAnimationsModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: []
 })
 export class AppModule {
 }

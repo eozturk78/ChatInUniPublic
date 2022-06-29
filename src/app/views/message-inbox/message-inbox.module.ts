@@ -4,6 +4,9 @@ import {MessageInboxComponent} from "./message-inbox.component";
 import {RouterModule} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 import {TranslateModule} from "@ngx-translate/core";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatMenuModule} from "@angular/material/menu";
+import {MatIconModule} from "@angular/material/icon";
 
 
 @NgModule({
@@ -20,7 +23,9 @@ import {TranslateModule} from "@ngx-translate/core";
     ]),
     CommonModule,
     FormsModule,
-    TranslateModule
+    TranslateModule,
+    MatMenuModule,
+    MatIconModule
   ]
 })
 export class MessageInboxModule {

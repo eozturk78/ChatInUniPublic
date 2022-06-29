@@ -12,7 +12,7 @@ import {FormsModule} from "@angular/forms";
   imports:[
     RouterModule.forChild([{
         path:'',
-        pathMatch:'',
+        pathMatch:'full',
         component: LandingComponent
       }]
     ),

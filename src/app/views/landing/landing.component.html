@@ -21,8 +21,8 @@
               </div>
             </div>
             <div class="block-content">
-              <h6>{{blog.CreatedDate.Value | date:'dd/MM/yy'}}</h6>
-              <h6>{{blog.Title.Value}}</h6>
+              <h3>{{blog.CreatedDate.Value | date:'dd/MM/yy'}}</h3>
+              <h3>{{blog.Title.Value}}</h3>
               <p [innerHTML]="blog.Body.Value | slice:0:250"></p>
             </div>
           </a>

@@ -91,6 +91,17 @@ export class MessageInboxComponent implements OnInit {
     this.onTurnToMessageList();
   }
 
+  onBlockUser() {
+    const params = {
+      BlockedUserName: this.userService.chosenInbox?.ChatCreatedUserName
+    }
+    this.userService.blockUserByUser(params);
+    let index = this.userService.inbox.findIndex(x => x.ChatId = this.userService.chosenInbox?.ChatId);
+    this.userService.inbox.splice(index, 1);
+    this.userService.chosenInbox = null;
+    this.onTurnToMessageList();
+  }
+
   onTurnToMessageList() {
     this.open = !this.open;
   }

@@ -23,18 +23,16 @@ export class AppComponent {
     this.baseCtrl.isBrowser = this.isHtmlBrowser;
     AppComponent.isBrowser.next(isPlatformBrowser(platformId));
     const p = {
-      Token: this.baseCtrl.getHandleStorageData("guestToken")
+      Token: this.baseCtrl.getHandleStorageData("token")
     };
     if (this.isHtmlBrowser) {
       this.userService.socket = io(Consts.protocol + Consts.apiPath);
       let language = window.location.pathname.substr(1, 2);
       if (language != "") this.baseCtrl.setLanguage(language)
       else this.baseCtrl.setLanguage(navigator.language);
-      if (this.baseCtrl.getHandleStorageData('token') == null) this.userService.getPublicToken(p);
-      else {
-        let token = this.baseCtrl.getHandleStorageData('token') || "";
-        this.userService.connectToSocket(token);
-      }
+      this.userService.getPublicToken(p);
+      let token = this.baseCtrl.getHandleStorageData('token') || "";
+      this.userService.connectToSocket(token);
     }
   }
 

@@ -9,7 +9,23 @@
              (click)="onTurnToMessageList()"></i>&nbsp;&nbsp;{{userService.chosenInbox.ChatCreatedUserName  | slice:0:10}}</span>
         <div class="delete-button" *ngIf="userService.chosenInbox!=null">
           <div class="display-table-cell">
-            ...
+            <a style="cursor: pointer;color: white" mat-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_vert</mat-icon>
+            </a>
+            <mat-menu #menu="matMenu">
+             <!-- <button mat-menu-item (click)="onDeleteChat()">
+                <mat-icon>list_alt</mat-icon>
+                <span translate="complaint_user"></span>
+              </button>-->
+              <button mat-menu-item (click)="onBlockUser()">
+                <mat-icon>block</mat-icon>
+                <span translate="block_user"></span>
+              </button>
+              <button mat-menu-item (click)="onDeleteChat()">
+                <mat-icon>delete</mat-icon>
+                <span translate="delete"></span>
+              </button>
+            </mat-menu>
           </div>
         </div>
       </div>

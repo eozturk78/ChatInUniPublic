@@ -25,4 +25,5 @@ export class Consts {
   public static getPublicBlogList = 'GetPublicBlogList';
   public static getPublicBlogDetails = 'GetPublicBlogDetails';
   public static getLandingContent = 'getLandingContent';
+  public static blockUserByUser = 'BlockUserByUser';
 }
