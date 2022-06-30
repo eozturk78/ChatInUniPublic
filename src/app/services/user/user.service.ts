@@ -174,6 +174,7 @@ export class UserService {
           this.errorMessage.onShowErrorMessage(error);
         });
   }
+
   // -- StatusList EndPoint
   getStatusList() {
     const methodUrl = this.serviceBaseUrl + Consts.getStatusList;
@@ -253,8 +254,9 @@ export class UserService {
           this.errorMessage.onShowErrorMessage(error);
         });
   }
+
   // -- blockUserByUser EndPoint
-    blockUserByUser(params: any) {
+  blockUserByUser(params: any) {
     const methodUrl = this.serviceBaseUrl + Consts.blockUserByUser;
     this.serviceConnectionService.serviceConnection(methodUrl, params, Enums.MethodType.POST)
       .subscribe((resp: any) => {
@@ -350,15 +352,19 @@ export class UserService {
         this.baseCtrl.playAudio();
       });
       this.socket.on('Message', (data: any) => {
-        let inb = this.inbox.find((x: any) => x.ChatCreatedUserName == data.FromUserName || x.ChatCreatedUserName == data.ToUserName);
-        inb.LastMessageDate = data.Date;
-        this .inbox.sort((val1, val2) => {
-          // @ts-ignore
-          return new Date(val2.LastMessageDate) - new Date(val1.LastMessageDate)
-        });
-        inb?.Messages?.push(data);
-        this.messageCount++;
-        this.baseCtrl.playAudio();
+        if (data.error == null && data.error == undefined) {
+          let inb = this.inbox.find((x: any) => x.ChatCreatedUserName == data.FromUserName || x.ChatCreatedUserName == data.ToUserName);
+          inb.LastMessageDate = data.Date;
+          this.inbox.sort((val1, val2) => {
+            // @ts-ignore
+            return new Date(val2.LastMessageDate) - new Date(val1.LastMessageDate)
+          });
+          inb?.Messages?.push(data);
+          this.messageCount++;
+          this.baseCtrl.playAudio();
+        } else {
+          console.log(data.error);
+        }
       });
     }
   }

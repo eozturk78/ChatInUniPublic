@@ -48,6 +48,8 @@ export class MessageInboxComponent implements OnInit {
         ChatId: this.userService.chosenInbox.ChatId,
         Message: this.message,
         ToUserName: this.userService.chosenInbox.ChatCreatedUserName,
+        Lang: this.baseCtrl.getHandleStorageData("lang"),
+        Token: this.baseCtrl.getHandleStorageData("token"),
         IsFromLoggedUser: true
       };
       if (this.baseCtrl.isBrowser) this.userService.socket.emit("Message", p);
@@ -55,7 +57,6 @@ export class MessageInboxComponent implements OnInit {
       this.userService.chosenInbox.LastMessageDate = this.baseCtrl.now();
       this.userService.inbox.sort(function (o1, o2) {
         return o2.LastMessageDate ? -1 : o1.LastMessageDate ? 1 : 0;
-
       });
       this.userService.inbox.sort((val1, val2) => {
         // @ts-ignore
@@ -92,14 +93,17 @@ export class MessageInboxComponent implements OnInit {
   }
 
   onBlockUser() {
-    const params = {
-      BlockedUserName: this.userService.chosenInbox?.ChatCreatedUserName
+    if (this.baseCtrl.isBrowser) {
+      const params = {
+        BlockedUserName: this.userService.chosenInbox?.ChatCreatedUserName,
+        ChatId: this.userService.chosenInbox?.ChatId
+      }
+      this.userService.blockUserByUser(params);
+      let index = this.userService.inbox.findIndex(x => x.ChatId == params.ChatId);
+      this.userService.inbox.splice(index, 1);
+      this.userService.chosenInbox = null;
+      this.onTurnToMessageList();
     }
-    this.userService.blockUserByUser(params);
-    let index = this.userService.inbox.findIndex(x => x.ChatId = this.userService.chosenInbox?.ChatId);
-    this.userService.inbox.splice(index, 1);
-    this.userService.chosenInbox = null;
-    this.onTurnToMessageList();
   }
 
   onTurnToMessageList() {
