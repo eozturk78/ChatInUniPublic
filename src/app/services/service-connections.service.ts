@@ -26,7 +26,7 @@ export class ServiceConnectionsService {
         let token = this.baseMethodsSerive.getHandleStorageData('token') || "";
         headers = headers.set('Token', token);
       }
-      let lang = this.baseMethodsSerive.pageLanguageCulturName; //this.baseMethodsSerive.getHandleStorageData('lang');
+      let lang = this.baseMethodsSerive.pageLanguageCulturName;
       if (lang != null) {
         headers = headers.set('lang', lang);
       }

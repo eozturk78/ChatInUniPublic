@@ -25,6 +25,11 @@ export class RequestModelsService {
   forgotPasswordRequest = {
     UserName: {Value: null, IsRequired: true, IsSendRequest: true}
   };
+  // -- ComplaintUser Request
+  complaintUserRequest = {
+    ToUserName: {Value: null, IsRequired: true, IsSendRequest: true},
+    ReasonText: {Value: null, IsRequired: true, IsSendRequest: true}
+  };
   // -- ResetPassword Request
   resetPasswordRequest = {
     Password: {Value: null, IsRequired: true, IsSendRequest: true},
@@ -111,6 +116,10 @@ export class RequestModelsService {
       ArrayList: true,
       ModelFunction: 'fnMetaTagsModel'
     }
+  };
+  // -- GoldUser Request
+  phoneNumberRequest = {
+    PhoneNumber: {Value: null, IsRequired: true, IsSendRequest: true}
   };
 
   fnStatusListModel() {

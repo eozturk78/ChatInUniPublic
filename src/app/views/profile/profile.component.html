@@ -37,7 +37,6 @@
           <button class="btn btn-danger" translate="send" (click)="onSubmit()"></button>
         </div>
       </form>
-
       <div class="row">
         <div class="col-sm-12">
           <input type="file" id="uploadedPhoto" style="display: none"
@@ -53,6 +52,28 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div  class="col-sm-12">
+          <hr>
+          <p translate="gold_user_desc" class="text-center"></p>
+          <form>
+            <div class="form-group">
+              <label translate="phone_number"></label>
+              <input type="phone_number" [(ngModel)]="userService.goldUserRequest.PhoneNumber.Value" name="phoneNumber" class="form-control"
+                    placeholder="ex: +380 98 11 22 33"
+                     [ngClass]="{'error-field': baseCtrl.checkField(userService.goldUserRequest.PhoneNumber) && submitted}">
+              <div *ngIf="baseCtrl.checkField(userService.goldUserRequest.PhoneNumber) && submitted"
+                   class="error-required" translate="field_required">
+              </div>
+            </div>
+            <div class="form-group">
+              <button class="btn btn-danger" translate="send" (click)="onSendGoldRequest()"></button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
 
     </div>
   </div>

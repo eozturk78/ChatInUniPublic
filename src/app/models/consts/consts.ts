@@ -26,4 +26,6 @@ export class Consts {
   public static getPublicBlogDetails = 'GetPublicBlogDetails';
   public static getLandingContent = 'getLandingContent';
   public static blockUserByUser = 'BlockUserByUser';
+  public static complaintUser = 'ComplaintUser';
+  public static sendGoldRequest = 'SendGoldRequest';
 }

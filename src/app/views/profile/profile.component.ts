@@ -10,6 +10,7 @@ import {Consts} from "../../models/consts/consts";
 })
 export class ProfileComponent implements OnInit {
   submitted = false;
+  submittedGoldUser = false;
 
   fileName: string | undefined;
 
@@ -69,5 +70,13 @@ export class ProfileComponent implements OnInit {
     this.baseCtrl.deleteHandleStorageData('token');
     this.baseCtrl.deleteHandleStorageData('email');
     window.location.href = '/';
+  }
+
+  onSendGoldRequest(){
+    const params = this.baseCtrl.getReadyBackendBody(this.userService.goldUserRequest)
+    if (params != false) {
+      this.userService.sendGoldRequest(params);
+    }
+
   }
 }

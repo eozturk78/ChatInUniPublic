@@ -2,6 +2,9 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {UserService} from "../../services/user/user.service";
 import {BaseMethodsService} from "../../services/base/base-methods.service";
 import {state, style, trigger, transition, animate} from "@angular/animations";
+import {MdlForgotPasswordComponent} from "../modal/mdl-forgot-password/mdl-forgot-password.component";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {MdlComplaintUserComponent} from "../modal/mdl-complaint-user/mdl-complaint-user.component";
 
 
 @Component({
@@ -33,7 +36,8 @@ export class MessageInboxComponent implements OnInit {
   @ViewChild('chatSender') chatSender: any;
   @ViewChild('chatMessageContainer') chatMessageContainer: any;
 
-  constructor(public userService: UserService, private baseCtrl: BaseMethodsService) {
+  constructor(public userService: UserService, private baseCtrl: BaseMethodsService,
+              private modalService: NgbModal) {
   }
 
   ngOnInit(): void {
@@ -104,6 +108,14 @@ export class MessageInboxComponent implements OnInit {
       this.userService.chosenInbox = null;
       this.onTurnToMessageList();
     }
+  }
+
+  onComplaintUser() {
+    this.modalService.open(MdlComplaintUserComponent, {
+      backdrop: 'static',
+      size: 'lg',
+      keyboard: true
+    });
   }
 
   onTurnToMessageList() {

@@ -19,6 +19,7 @@ import {Consts} from "./models/consts/consts";
 import {FooterComponent} from './views/tpls/footer/footer.component';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from "@angular/material/icon";
+import {MdlComplaintUserComponent} from "./views/modal/mdl-complaint-user/mdl-complaint-user.component";
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import {MatIconModule} from "@angular/material/icon";
     MenuComponent,
     AlertComponentComponent,
     MdlForgotPasswordComponent,
-    FooterComponent
+    FooterComponent,
+    MdlComplaintUserComponent
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'serverApp'}),
