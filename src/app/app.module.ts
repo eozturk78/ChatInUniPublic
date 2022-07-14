@@ -1,25 +1,25 @@
-import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
-import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
-import {FormsModule} from "@angular/forms";
-import {RouterModule} from "@angular/router";
-import {MenuComponent} from './views/menu/menu.component';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { MenuComponent } from './views/menu/menu.component';
 
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import {HttpClient, HttpClientModule} from "@angular/common/http";
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {ModalModule} from "ngb-modal";
-import {MdlForgotPasswordComponent} from './views/modal/mdl-forgot-password/mdl-forgot-password.component';
-import {AlertComponentComponent} from './views/tpls/alert-component/alert-component.component';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {Consts} from "./models/consts/consts";
-import {FooterComponent} from './views/tpls/footer/footer.component';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatIconModule} from "@angular/material/icon";
-import {MdlComplaintUserComponent} from "./views/modal/mdl-complaint-user/mdl-complaint-user.component";
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ModalModule } from 'ngb-modal';
+import { MdlForgotPasswordComponent } from './views/modal/mdl-forgot-password/mdl-forgot-password.component';
+import { AlertComponentComponent } from './views/tpls/alert-component/alert-component.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Consts } from './models/consts/consts';
+import { FooterComponent } from './views/tpls/footer/footer.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MdlComplaintUserComponent } from './views/modal/mdl-complaint-user/mdl-complaint-user.component';
 
 @NgModule({
   declarations: [
@@ -28,10 +28,10 @@ import {MdlComplaintUserComponent} from "./views/modal/mdl-complaint-user/mdl-co
     AlertComponentComponent,
     MdlForgotPasswordComponent,
     FooterComponent,
-    MdlComplaintUserComponent
+    MdlComplaintUserComponent,
   ],
   imports: [
-    BrowserModule.withServerTransition({appId: 'serverApp'}),
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     RouterModule,
     FormsModule,
@@ -40,23 +40,25 @@ import {MdlComplaintUserComponent} from "./views/modal/mdl-complaint-user/mdl-co
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
+        deps: [HttpClient],
       },
-      isolate: true
+      isolate: true,
     }),
     NgbModule,
     ModalModule.forRoot(),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
-  exports: []
+  exports: [],
 })
-export class AppModule {
-}
+export class AppModule {}
 
 // required for AOT compilation
 export function HttpLoaderFactory(http: HttpClient) {
-
-  return new TranslateHttpLoader(http, Consts.protocol + Consts.apiPath + Consts.resourcesFolder, '.json');
+  return new TranslateHttpLoader(
+    http,
+    Consts.protocol + Consts.apiPath + Consts.resourcesFolder,
+    '.json'
+  );
 }

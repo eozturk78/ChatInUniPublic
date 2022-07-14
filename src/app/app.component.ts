@@ -1,4 +1,4 @@
-import {Component, Inject, PLATFORM_ID} from '@angular/core';
+import {AfterViewInit, Component, Inject, PLATFORM_ID} from '@angular/core';
 import {BaseMethodsService} from "./services/base/base-methods.service";
 import {UserService} from "./services/user/user.service";
 import {DOCUMENT, isPlatformBrowser, isPlatformServer} from "@angular/common";
@@ -12,7 +12,7 @@ import {Consts} from "./models/consts/consts";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit{
   title = 'ChatinUniPublicFE';
 
 
@@ -41,8 +41,18 @@ export class AppComponent {
 
   isHtmlBrowser = false;
   isServer: any;
+  isLoadedPage = false;
 
   ngOnInit(): void {
+    window.onload = function() {
+      // @ts-ignore
+      document.getElementById('webContent').style.display = "block";
+      // @ts-ignore
+      document.getElementById('webLoader').style.display = "none";
+
+    };
+  }
+  ngAfterViewInit(): void {
   }
 
 }

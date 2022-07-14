@@ -61,8 +61,8 @@
               <label translate="phone_number"></label>
               <input type="phone_number" [(ngModel)]="userService.goldUserRequest.PhoneNumber.Value" name="phoneNumber" class="form-control"
                     placeholder="ex: +380 98 11 22 33"
-                     [ngClass]="{'error-field': baseCtrl.checkField(userService.goldUserRequest.PhoneNumber) && submitted}">
-              <div *ngIf="baseCtrl.checkField(userService.goldUserRequest.PhoneNumber) && submitted"
+                     [ngClass]="{'error-field': baseCtrl.checkField(userService.goldUserRequest.PhoneNumber) && submittedGoldUser}">
+              <div *ngIf="baseCtrl.checkField(userService.goldUserRequest.PhoneNumber) && submittedGoldUser"
                    class="error-required" translate="field_required">
               </div>
             </div>

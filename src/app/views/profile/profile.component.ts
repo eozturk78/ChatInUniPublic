@@ -62,6 +62,7 @@ export class ProfileComponent implements OnInit {
       ImageBase64: base64result,
       FileName: this.fileName
     };
+    console.log(JSON.stringify(params));
     this.userService.uploadProfilePhoto(params);
   }
 
@@ -73,6 +74,7 @@ export class ProfileComponent implements OnInit {
   }
 
   onSendGoldRequest(){
+    this.submittedGoldUser = true;
     const params = this.baseCtrl.getReadyBackendBody(this.userService.goldUserRequest)
     if (params != false) {
       this.userService.sendGoldRequest(params);

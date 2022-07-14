@@ -61,6 +61,7 @@ export class ServiceConnectionsService {
   };
 
   parseDataToJsonDetails = function (data: any) {
+    console.log(JSON.stringify(data));
     const response = data.Response;
     return response;
   };

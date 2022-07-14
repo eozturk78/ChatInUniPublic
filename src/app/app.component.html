@@ -1,5 +1,8 @@
 <app-alert-component></app-alert-component>
-<div [ngClass]="{'ssr-not-loaded': !isHtmlBrowser}">
+<div *ngIf="!isLoadedPage" style="min-height: calc(100vh - 200px);display: block"  id="webLoader">
+
+</div>
+<div [ngClass]="{'ssr-not-loaded': !isHtmlBrowser}" id="webContent" style="display: none;">
   <app-menu></app-menu>
   <router-outlet></router-outlet>
   <app-footer></app-footer>
