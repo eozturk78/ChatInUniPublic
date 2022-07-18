@@ -18,7 +18,6 @@ export class MdlForgotPasswordComponent implements OnInit {
   }
 
   onSubmit() {
-
     this.submitted = true;
     const params = this.baseCtrl.getReadyBackendBody(this.userService.forgotPasswordForm)
     if (params != false) {

@@ -117,7 +117,7 @@ export class BaseMethodsService {
             requestForm[key].Value = [];
           }
           if (response[key] != null) {
-            response[key].forEach((rk: any) => {
+            response[key]?.forEach((rk: any) => {
               // @ts-ignore
               const params = this.requestModels[requestForm[key].ModelFunction]();
               if (params != null) {

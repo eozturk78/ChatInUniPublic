@@ -125,7 +125,7 @@ export class UserService {
       .subscribe(
         (resp: any) => {
           // @ts-ignore
-          window.location = '/login';
+          window.location = `${this.baseCtrl.pageLanguage}/login`;
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -237,6 +237,10 @@ export class UserService {
         (resp: any) => {
           const data =
             this.serviceConnectionService.parseDataToJsonDetails(resp);
+          data.Records?.forEach((data: any) => {
+            if(data.ProfilePhotos!=null) data.ProfilePhotos = JSON.parse(data.ProfilePhotos);
+          });
+
           this.statusList = data.Statuses;
           this.baseCtrl.fillResponseToForm(this.activeUsers, data, true);
         },
@@ -395,14 +399,12 @@ export class UserService {
             'ChatInUni! ' + this.blogDetailObject.Title.Value
           );
           this.blogDetailObject?.KeyWords?.Value?.forEach((keyWord: any) => {
-            this.metaTagService.addTags(
-              [
-                {
-                  name: keyWord?.Name.Value,
-                  content: keyWord?.Description.Value,
-                },
-              ]
-            );
+            this.metaTagService.addTags([
+              {
+                name: keyWord?.Name.Value,
+                content: keyWord?.Description.Value,
+              },
+            ]);
           });
         },
         (error: any) => {
@@ -472,9 +474,10 @@ export class UserService {
               x.ChatCreatedUserName == data.ToUserName
           );
           inb.LastMessageDate = data.Date;
-          this.inbox.sort((val1 : any, val2: any) => {
+          this.inbox.sort((val1: any, val2: any) => {
             return (
-              new Date(val2.LastMessageDate).getTime() - new Date(val1.LastMessageDate).getTime()
+              new Date(val2.LastMessageDate).getTime() -
+              new Date(val1.LastMessageDate).getTime()
             );
           });
           inb?.Messages?.push(data);

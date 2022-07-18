@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
   onOpenForgotPassword() {
     this.modalService.open(MdlForgotPasswordComponent, {
       backdrop: 'static',
-      size: 'lg',
+      size: 'md',
       keyboard: true
     });
   }
