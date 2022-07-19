@@ -1,11 +1,16 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {UserService} from "../../services/user/user.service";
-import {BaseMethodsService} from "../../services/base/base-methods.service";
-import {state, style, trigger, transition, animate} from "@angular/animations";
-import {MdlForgotPasswordComponent} from "../modal/mdl-forgot-password/mdl-forgot-password.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {MdlComplaintUserComponent} from "../modal/mdl-complaint-user/mdl-complaint-user.component";
-
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { UserService } from '../../services/user/user.service';
+import { BaseMethodsService } from '../../services/base/base-methods.service';
+import {
+  state,
+  style,
+  trigger,
+  transition,
+  animate,
+} from '@angular/animations';
+import { MdlForgotPasswordComponent } from '../modal/mdl-forgot-password/mdl-forgot-password.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MdlComplaintUserComponent } from '../modal/mdl-complaint-user/mdl-complaint-user.component';
 
 @Component({
   selector: 'app-message-inbox',
@@ -13,50 +18,56 @@ import {MdlComplaintUserComponent} from "../modal/mdl-complaint-user/mdl-complai
   styleUrls: ['./message-inbox.component.scss'],
   animations: [
     trigger('slideLeftToRight', [
-      state('left', style({
-        transform: 'translateX(-105%)'
-      })),
-      state('right', style({
-        transform: 'translateX(0%)'
-      })),
-      transition('left => right', [
-        animate('0.2s')
-      ]),
-      transition('right => left', [
-        animate('0.2s')
-      ])
-    ])
-  ]
+      state(
+        'left',
+        style({
+          transform: 'translateX(-105%)',
+        })
+      ),
+      state(
+        'right',
+        style({
+          transform: 'translateX(0%)',
+        })
+      ),
+      transition('left => right', [animate('0.2s')]),
+      transition('right => left', [animate('0.2s')]),
+    ]),
+  ],
 })
 export class MessageInboxComponent implements OnInit {
   message = null;
+  searchChat!:string;
   open = false;
   isMobile: boolean = false;
   someExpression: boolean = false;
   @ViewChild('chatSender') chatSender: any;
   @ViewChild('chatMessageContainer') chatMessageContainer: any;
 
-  constructor(public userService: UserService, private baseCtrl: BaseMethodsService,
-              private modalService: NgbModal) {
-  }
+  constructor(
+    public userService: UserService,
+    private baseCtrl: BaseMethodsService,
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
-    if (this.baseCtrl.isBrowser && window.innerWidth < 769) this.isMobile = true;
+    if (this.baseCtrl.isBrowser && window.innerWidth < 769)
+      this.isMobile = true;
     this.userService.getMessageList();
     this.userService.getLandingContent();
   }
 
   onSendMessage() {
-    if (this.message != null && this.message != "") {
+    if (this.message != null && this.message != '') {
       const p = {
         ChatId: this.userService.chosenInbox.ChatId,
         Message: this.message,
         ToUserName: this.userService.chosenInbox.ChatCreatedUserName,
-        Lang: this.baseCtrl.getHandleStorageData("lang"),
-        Token: this.baseCtrl.getHandleStorageData("token"),
-        IsFromLoggedUser: true
+        Lang: this.baseCtrl.getHandleStorageData('lang'),
+        Token: this.baseCtrl.getHandleStorageData('token'),
+        IsFromLoggedUser: true,
       };
-      if (this.baseCtrl.isBrowser) this.userService.socket.emit("Message", p);
+      if (this.baseCtrl.isBrowser) this.userService.socket.emit('Message', p);
       this.userService.chosenInbox.Messages.push(p);
       this.userService.chosenInbox.LastMessageDate = this.baseCtrl.now();
       this.userService.inbox.sort(function (o1, o2) {
@@ -64,22 +75,32 @@ export class MessageInboxComponent implements OnInit {
       });
       this.userService.inbox.sort((val1, val2) => {
         // @ts-ignore
-        return new Date(val2.LastMessageDate) - new Date(val1.LastMessageDate)
+        return new Date(val2.LastMessageDate) - new Date(val1.LastMessageDate);
       });
-
       this.message = null;
       this.gotoEndOfToScreen();
     }
+  }
+  fnGetChatList() {
+    var list = this.searchChat!=null ? this.userService.inbox.filter(
+      (x) => x.ChatCreatedUserName.toString().toLowerCase().indexOf(this.searchChat?.toLowerCase()) > -1
+    ) : this.userService.inbox;
+    return list;
   }
 
   onChooseUser(ib: any) {
     this.open = !this.open;
     this.userService.chosenInbox = ib;
+    this.userService.socket.emit('ReadChatMessage', {
+      ChatId: ib.ChatId,
+      ChatCreatedUserName: ib.ChatCreatedUserName,
+    });
+    this.userService.chosenInbox.UnReadMessageCount = 0;
     this.gotoEndOfToScreen();
   }
 
   gotoEndOfToScreen() {
-    var objDiv = document.getElementById("chatBox");
+    var objDiv = document.getElementById('chatBox');
     if (objDiv != null) {
       objDiv.scrollTop = objDiv?.scrollHeight;
     }
@@ -87,10 +108,12 @@ export class MessageInboxComponent implements OnInit {
 
   onDeleteChat() {
     const params = {
-      ChatId: this.userService.chosenInbox?.ChatId
-    }
+      ChatId: this.userService.chosenInbox?.ChatId,
+    };
     this.userService.deleteChat(params);
-    let index = this.userService.inbox.findIndex(x => x.ChatId = params.ChatId);
+    let index = this.userService.inbox.findIndex(
+      (x) => (x.ChatId = params.ChatId)
+    );
     this.userService.inbox.splice(index, 1);
     this.userService.chosenInbox = null;
     this.onTurnToMessageList();
@@ -100,10 +123,12 @@ export class MessageInboxComponent implements OnInit {
     if (this.baseCtrl.isBrowser) {
       const params = {
         BlockedUserName: this.userService.chosenInbox?.ChatCreatedUserName,
-        ChatId: this.userService.chosenInbox?.ChatId
-      }
+        ChatId: this.userService.chosenInbox?.ChatId,
+      };
       this.userService.blockUserByUser(params);
-      let index = this.userService.inbox.findIndex(x => x.ChatId == params.ChatId);
+      let index = this.userService.inbox.findIndex(
+        (x) => x.ChatId == params.ChatId
+      );
       this.userService.inbox.splice(index, 1);
       this.userService.chosenInbox = null;
       this.onTurnToMessageList();
@@ -114,7 +139,7 @@ export class MessageInboxComponent implements OnInit {
     this.modalService.open(MdlComplaintUserComponent, {
       backdrop: 'static',
       size: 'lg',
-      keyboard: true
+      keyboard: true,
     });
   }
 

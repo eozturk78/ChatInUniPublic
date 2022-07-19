@@ -474,6 +474,7 @@ export class UserService {
               x.ChatCreatedUserName == data.ToUserName
           );
           inb.LastMessageDate = data.Date;
+          inb.UnReadMessageCount++;
           this.inbox.sort((val1: any, val2: any) => {
             return (
               new Date(val2.LastMessageDate).getTime() -
