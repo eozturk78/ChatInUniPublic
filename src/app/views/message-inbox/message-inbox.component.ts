@@ -1,3 +1,4 @@
+import { AppComponent } from './../../app.component';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../../services/user/user.service';
 import { BaseMethodsService } from '../../services/base/base-methods.service';
@@ -37,7 +38,7 @@ import { MdlComplaintUserComponent } from '../modal/mdl-complaint-user/mdl-compl
 })
 export class MessageInboxComponent implements OnInit {
   message = null;
-  searchChat!:string;
+  searchChat!: string;
   open = false;
   isMobile: boolean = false;
   someExpression: boolean = false;
@@ -82,21 +83,29 @@ export class MessageInboxComponent implements OnInit {
     }
   }
   fnGetChatList() {
-    var list = this.searchChat!=null ? this.userService.inbox.filter(
-      (x) => x.ChatCreatedUserName.toString().toLowerCase().indexOf(this.searchChat?.toLowerCase()) > -1
-    ) : this.userService.inbox;
+    var list =
+      this.searchChat != null
+        ? this.userService.inbox.filter(
+            (x) =>
+              x.ChatCreatedUserName.toString()
+                .toLowerCase()
+                .indexOf(this.searchChat?.toLowerCase()) > -1
+          )
+        : this.userService.inbox;
     return list;
   }
 
   onChooseUser(ib: any) {
     this.open = !this.open;
     this.userService.chosenInbox = ib;
-    this.userService.socket.emit('ReadChatMessage', {
-      ChatId: ib.ChatId,
-      ChatCreatedUserName: ib.ChatCreatedUserName,
-    });
-    this.userService.chosenInbox.UnReadMessageCount = 0;
-    this.gotoEndOfToScreen();
+    if (this.userService.chosenInbox.UnReadMessageCount > 0) {
+      this.userService.socket.emit('ReadChatMessage', {
+        ChatId: ib.ChatId,
+        ChatCreatedUserName: this.userService.chosenInbox.ChatCreatedUserName
+      });
+      this.userService.chosenInbox.UnReadMessageCount = 0;
+      this.gotoEndOfToScreen();
+    }
   }
 
   gotoEndOfToScreen() {
@@ -141,6 +150,11 @@ export class MessageInboxComponent implements OnInit {
       size: 'lg',
       keyboard: true,
     });
+  }
+
+  onGotoProfile() {
+    if (AppComponent.isBrowser)
+      window.location.href = `${this.baseCtrl.pageLanguage}/user-profile-detail/${this.userService.chosenInbox.ChatCreatedUserName}`;
   }
 
   onTurnToMessageList() {

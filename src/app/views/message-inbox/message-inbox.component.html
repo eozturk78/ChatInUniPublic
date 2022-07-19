@@ -23,6 +23,10 @@
               <mat-icon>more_vert</mat-icon>
             </a>
             <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="onGotoProfile()"  *ngIf="userService.chosenInbox.ChatCreatedUserName?.toString().indexOf('CHT-') == -1">
+                <mat-icon>person</mat-icon>
+                <span translate="go_to_profile"></span>
+              </button>
               <button mat-menu-item (click)="onComplaintUser()">
                 <mat-icon>list_alt</mat-icon>
                 <span translate="complaint_user"></span>
