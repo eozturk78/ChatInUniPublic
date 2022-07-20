@@ -2,17 +2,34 @@
   <div class="chat-container">
     <div class="chat-header">
       <div class="chat-header-title text-center">
-        <input class="form-control search-chat-input"
-
-          [(ngModel)]="searchChat" placeholder="{{'search_ph' | translate}}" *ngIf="!open || !isMobile">
+        <input
+          class="form-control search-chat-input"
+          [(ngModel)]="searchChat"
+          placeholder="{{ 'search_ph' | translate }}"
+          *ngIf="!open || !isMobile"
+        />
       </div>
       <div class="chat-header-user">
         <span *ngIf="userService.chosenInbox != null">
-          <i class="fa fa-angle-left" (click)="onTurnToMessageList()"></i
-          >&nbsp;&nbsp;{{
-            userService.chosenInbox.ChatCreatedUserName | slice: 0:10
-          }}</span
-        >
+          <div style="display: flex; flex-direction: row; justify-content: space-between; ">
+            <i class="fa fa-angle-left" (click)="onTurnToMessageList()"></i> &nbsp;&nbsp;
+            <div class="profile-img" style="margin-top: 10px;">
+              <img
+                style="width: 30px; height: 30px"
+                src="../../../assets/image/profile-place-holder.jpg"
+                *ngIf="userService.chosenInbox.ProfilePhotos == null"
+              />
+              <img
+                style="width: 30px; height: 30px"
+                [src]="userService.chosenInbox.ProfilePhotos[0].FileURL"
+                *ngIf="userService.chosenInbox.ProfilePhotos != null"
+              />
+            </div>
+            <div style="float: right">
+              {{ userService.chosenInbox.ChatCreatedUserName | slice: 0:10 }}
+            </div>
+          </div>
+        </span>
         <div class="delete-button" *ngIf="userService.chosenInbox != null">
           <div class="display-table-cell">
             <a
@@ -23,7 +40,15 @@
               <mat-icon>more_vert</mat-icon>
             </a>
             <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="onGotoProfile()"  *ngIf="userService.chosenInbox.ChatCreatedUserName?.toString().indexOf('CHT-') == -1">
+              <button
+                mat-menu-item
+                (click)="onGotoProfile()"
+                *ngIf="
+                  userService.chosenInbox.ChatCreatedUserName?.toString().indexOf(
+                    'CHT-'
+                  ) == -1
+                "
+              >
                 <mat-icon>person</mat-icon>
                 <span translate="go_to_profile"></span>
               </button>
@@ -55,12 +80,27 @@
       >
         <div class="image-txt-container">
           <div class="profile-img">
-            <img src="../../../assets/image/profile-place-holder.jpg" />
+            <img
+              src="../../../assets/image/profile-place-holder.jpg"
+              *ngIf="ib.ProfilePhotos == null"
+            />
+            <img
+              [src]="ib.ProfilePhotos[0].FileURL"
+              *ngIf="ib.ProfilePhotos != null"
+            />
           </div>
           <b>{{ ib.ChatCreatedUserName | slice: 0:10 }}</b>
+          <div>
+            {{ ib.Messages![ib.Messages.length - 1].Message.substr(0, 40) }}
+          </div>
         </div>
         <div
-          style="float: right; position: unset; background-color: #313131;font-size: 10px;"
+          style="
+            float: right;
+            position: unset;
+            background-color: #313131;
+            font-size: 10px;
+          "
           class="notification-count-div"
           *ngIf="ib.UnReadMessageCount > 0"
         >

@@ -147,7 +147,7 @@ export class MessageInboxComponent implements OnInit {
   onComplaintUser() {
     this.modalService.open(MdlComplaintUserComponent, {
       backdrop: 'static',
-      size: 'lg',
+      size: 'md',
       keyboard: true,
     });
   }

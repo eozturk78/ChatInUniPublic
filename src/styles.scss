@@ -499,9 +499,9 @@ app-alert-component .alert-success {
 }
 
 .image-txt-container {
-  display: flex;
   align-items: center;
   flex-direction: row;
+  width: 100%;
 }
 
 .main-status-circle {

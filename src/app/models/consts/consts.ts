@@ -1,7 +1,7 @@
 export class Consts {
   // -- Api information
   public static protocol = 'https://';
-  public static apiPath = 'test-api.chatinuni.com/';
+  public static apiPath = 'api.chatinuni.com/';
   public static resourcesFolder = 'resources/';
   public static serviceType = '';
   // -- User Service
