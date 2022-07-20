@@ -5,6 +5,7 @@ import {RouterModule} from "@angular/router";
 import {NgbTooltipModule} from "@ng-bootstrap/ng-bootstrap";
 import {TranslateModule} from "@ngx-translate/core";
 
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import {TranslateModule} from "@ngx-translate/core";
     }]),
     CommonModule,
     NgbTooltipModule,
-    TranslateModule
+    TranslateModule,
+    MatIconModule
   ]
 })
 export class MainModule {
