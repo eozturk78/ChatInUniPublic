@@ -65,6 +65,8 @@ export class UserService {
   chosenInbox: any;
   messageCount: number = 0;
 
+  userName?: string;
+
   // -- SignUp EndPoint
   signUp(params: any) {
     const methodUrl = this.serviceBaseUrl + Consts.signUp;
@@ -72,7 +74,18 @@ export class UserService {
       .serviceConnection(methodUrl, params, Enums.MethodType.POST)
       .subscribe(
         (resp: any) => {
-          this.serviceConnectionService.setEndPointResponse();
+          const data = this.serviceConnectionService.parseDataToJsonList(resp);
+          if (data != null) {
+            this.baseCtrl.setHandleStorageData('token', data[0].Token);
+            this.baseCtrl.setHandleStorageData('email', data[0].Email);
+            this.baseCtrl.setHandleStorageData('userName', data[0].UserName);
+            this.userName = data[0].UserName;
+            this.socket.emit('UpdateSocketId', {
+              Token: data[0].Token,
+            });
+            this.router.navigate([`${this.baseCtrl.pageLanguage}/profile`]);
+          }
+          //
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -92,8 +105,9 @@ export class UserService {
           this.baseCtrl.setHandleStorageData('token', data.Token);
           this.baseCtrl.setHandleStorageData('email', data.Email);
           this.baseCtrl.setHandleStorageData('userName', data.UserName);
+          this.userName = data.UserName;
           this.socket.emit('UpdateSocketId', { Token: data.Token });
-          window.location.href = '/';
+          this.router.navigate([`${this.baseCtrl.pageLanguage}/active-users`]);
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -136,6 +150,7 @@ export class UserService {
   // -- GetProfile EndPoint
   getProfile() {
     const methodUrl = this.serviceBaseUrl + Consts.getProfile;
+    this.profileForm.ProfilePhotos.Value = null;
     this.serviceConnectionService
       .serviceConnection(methodUrl, null, Enums.MethodType.GET)
       .subscribe(
@@ -238,7 +253,8 @@ export class UserService {
           const data =
             this.serviceConnectionService.parseDataToJsonDetails(resp);
           data.Records?.forEach((data: any) => {
-            if(data.ProfilePhotos!=null) data.ProfilePhotos = JSON.parse(data.ProfilePhotos);
+            if (data.ProfilePhotos != null)
+              data.ProfilePhotos = JSON.parse(data.ProfilePhotos);
           });
 
           this.statusList = data.Statuses;

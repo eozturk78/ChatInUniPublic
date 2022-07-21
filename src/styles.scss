@@ -1,6 +1,6 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
 // Plus imports for other components in your app.
 
 // Include the common styles for Angular Material. We include this here so that you only
@@ -12,20 +12,27 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $ChatinUniPublicFE-primary: mat.define-palette(mat.$indigo-palette);
-$ChatinUniPublicFE-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+$ChatinUniPublicFE-accent: mat.define-palette(
+  mat.$pink-palette,
+  A200,
+  A100,
+  A400
+);
 
 // The warn palette is optional (defaults to red).
 $ChatinUniPublicFE-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$ChatinUniPublicFE-theme: mat.define-light-theme((
-  color: (
-    primary: $ChatinUniPublicFE-primary,
-    accent: $ChatinUniPublicFE-accent,
-    warn: $ChatinUniPublicFE-warn,
+$ChatinUniPublicFE-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $ChatinUniPublicFE-primary,
+      accent: $ChatinUniPublicFE-accent,
+      warn: $ChatinUniPublicFE-warn,
+    ),
   )
-));
+);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -35,21 +42,25 @@ $ChatinUniPublicFE-theme: mat.define-light-theme((
 @import "~app/styles/variables.scss";
 @import "~app/styles/inbox.scss";
 
-
-.mat-body, .mat-body-1, .mat-typography .mat-body, .mat-typography .mat-body-1, .mat-typography {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+.mat-body,
+.mat-body-1,
+.mat-typography .mat-body,
+.mat-typography .mat-body-1,
+.mat-typography {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
 }
 
 /* You can add global styles to this file, and also import other style files */
 :host {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important;
   font-size: 14px !important;
   color: #333;
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 
 a {
   text-decoration: none !important;
@@ -75,7 +86,6 @@ p {
 .spacer {
   flex: 1;
 }
-
 
 .content {
   margin: 82px auto 32px;
@@ -127,7 +137,7 @@ p {
 }
 
 .landing-top {
-  background: url('/assets/image/chatinuni-landing-3.jpg');
+  background: url("/assets/image/chatinuni-landing-3.jpg");
   width: 100%;
   min-height: 600px;
   max-height: 800px;
@@ -159,8 +169,8 @@ p {
   font-weight: bold !important;
 }
 
-
-.btn-start-chating:visited, .btn-start-chating:hover {
+.btn-start-chating:visited,
+.btn-start-chating:hover {
   color: $top-footer-color !important;
 }
 
@@ -334,7 +344,7 @@ footer a {
   align-items: center;
   font-size: 12px;
   padding: 3px 10px;
-  border: 1px solid rgba(27, 31, 35, .2);
+  border: 1px solid rgba(27, 31, 35, 0.2);
   border-radius: 3px;
   background-image: linear-gradient(-180deg, #fafbfc, #eff3f6 90%);
   margin-left: 4px;
@@ -343,8 +353,8 @@ footer a {
 
 .github-star-badge:hover {
   background-image: linear-gradient(-180deg, #f0f3f6, #e6ebf1 90%);
-  border-color: rgba(27, 31, 35, .35);
-  background-position: -.5em;
+  border-color: rgba(27, 31, 35, 0.35);
+  background-position: -0.5em;
 }
 
 .github-star-badge .material-icons {
@@ -389,7 +399,6 @@ svg#clouds {
     visibility: hidden;
   }
 }
-
 
 // -- Required Fields
 .error-required {
@@ -465,7 +474,8 @@ app-alert-component .alert-success {
   object-fit: cover;
 }
 
-.status-list-box .profile-img img, .main-status-circle .profile-img img {
+.status-list-box .profile-img img,
+.main-status-circle .profile-img img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -495,7 +505,7 @@ app-alert-component .alert-success {
   right: -10px;
   color: white;
   font-weight: bold;
-  display: table
+  display: table;
 }
 
 .image-txt-container {
@@ -537,7 +547,7 @@ app-alert-component .alert-success {
 
 .landing-text {
   width: 600px;
-  margin: 0 auto
+  margin: 0 auto;
 }
 
 .status-list-box .profile-img {
@@ -554,7 +564,10 @@ app-alert-component .alert-success {
 }
 
 @media (max-width: 768px) {
-
+  .logout-button {
+    margin-bottom: 10px!important;
+    bottom: 40px!important;
+  }
   .content {
     padding: 5px 16px !important;
     margin: 60px auto 32px !important;
@@ -577,11 +590,10 @@ app-alert-component .alert-success {
 }
 
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+@import "~bootstrap/scss/bootstrap";
 
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
-
+@import "~bootstrap/scss/bootstrap";
 
 body {
   margin: 0;

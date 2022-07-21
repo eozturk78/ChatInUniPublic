@@ -44,6 +44,7 @@
           <div class="upload-photo text-right" (click)="onOpenChoosePhotoDialog()"><i class="fa fa-plus"></i> <span
             translate="upload_photo"></span></div>
           <hr>
+          <p *ngIf="userService.profileForm.ProfilePhotos.Value==null" translate="please_add_photo"></p>
           <div *ngFor="let p of userService.profileForm.ProfilePhotos.Value">
             <div class="profile-img">
               <img src="{{p.FileURL.Value}}" width="100" height="100">
@@ -79,11 +80,9 @@
   </div>
 
 
-  <div class="main-status-circle" (click)="onLogout()">
+  <div class="main-status-circle logout-button" (click)="onLogout()">
     <div class="display-table-cell">
-
       <i class="fa fa-sign-out" aria-hidden="true"></i>
-
     </div>
   </div>
 </div>
