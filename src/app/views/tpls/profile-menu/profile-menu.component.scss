@@ -1,0 +1,18 @@
+
+.menu-ul {
+  display: flex;
+  flex-basis: 236px;
+  flex-direction: column;
+  flex-grow: 0;
+  flex-shrink: 0;
+  list-style: none;
+}
+
+.menu-ul li{
+  height: 20px;
+}
+
+.menu-ul li  a{
+  color: #000;
+  font-size: 16px;
+}

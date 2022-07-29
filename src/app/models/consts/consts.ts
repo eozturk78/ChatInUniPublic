@@ -1,7 +1,7 @@
 export class Consts {
   // -- Api information
   public static protocol = 'https://';
-  public static apiPath = 'api.chatinuni.com/';
+  public static apiPath = 'test-api.chatinuni.com/';
   public static resourcesFolder = 'resources/';
   public static serviceType = '';
   // -- User Service
@@ -11,10 +11,12 @@ export class Consts {
   public static login = 'Login';
   public static forgotPassword = 'ForgotPassword';
   public static resetPassword = 'ResetPassword';
+  public static changePassword = 'ChangePassword';
   public static signUp = 'SignUp';
   public static updateProfile = 'UpdateProfile';
   public static uploadProfilePhoto = 'UploadProfilePhoto';
   public static deleteProfilePhoto = 'DeleteProfilePhoto';
+  public static setMainProfilePhoto = 'SetMainProfilePhoto';
   public static getProfile = 'GetProfile';
   public static getStatusList = 'GetStatusList';
   public static getActiveUserList = 'GetActiveUserList';

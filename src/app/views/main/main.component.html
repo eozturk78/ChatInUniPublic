@@ -1,5 +1,4 @@
 <div class="content" role="main">
-
   <a (click)="onShuffle()" style="cursor: pointer" translate="shuffle"></a><br><br>
   <div *ngFor="let act of userService.activeUsers.Records.Value">
     <a [routerLink]="['/'+base.pageLanguage+'/user-profile-detail/' +act.UserName.Value]" >
@@ -14,12 +13,16 @@
       </div>
     </a>
   </div>
-  <div class="status-list-box" [@openClose]="isOpen ? 'open' : 'closed'" *ngIf="isOpen">
-    <div *ngFor="let status of userService.statusList" (click)="onChooseStatus(status)" style="cursor: pointer">
-      <img *ngIf="status.FileUrl!=null" [src]="status.FileUrl" style="width: 30px; height: 30px"> {{status.StatusText}}
+  <div class="status-list-box" [@openClose]="isOpen ? 'open' : 'closed'">
+    <h3 translate="search_by_status" style="color: #abadaf;"></h3>
+    <div *ngFor="let status of userService.statusList" (click)="onChooseStatus(status)" style="cursor: pointer; margin-bottom: 5px;">
+      <img *ngIf="status.FileUrl!=null" [src]="status.FileUrl" style="width: 30px; height: 30px">&nbsp;&nbsp;{{status.StatusText}}
     </div>
   </div>
-  <div class="main-status-circle" (click)="onOpenStatusBox()">
+  <div class="main-status-circle"
+    [ngClass]="{'open-main-status-circle': isMobile && isOpen}"
+    [@openCloseStatusIcon]="!isMobile && isOpen ? 'open' : 'closed'"
+    (click)="onOpenStatusBox()">
     <div class="display-table-cell">
       <div *ngIf="chosenStatus!=null">
         <img *ngIf="chosenStatus.FileUrl!=null" [src]="chosenStatus.FileUrl"  style="width: 30px; height: 30px">

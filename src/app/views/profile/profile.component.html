@@ -1,88 +1,93 @@
 <div class="content" role="main">
-
   <div class="row">
-    <div class="col-sm-6 offset-sm-3">
-      <form>
-        <div class="form-group">
-          <label translate="email"></label>
-          <input type="email" [(ngModel)]="userService.profileForm.Email.Value" name="email" class="form-control"
-                 [ngClass]="{'error-field': baseCtrl.checkField(userService.profileForm.Email) && submitted}">
-          <div *ngIf="baseCtrl.checkField(userService.profileForm.Email) && submitted"
-               class="error-required" translate="field_required">
+    <div class="col-sm-8 offset-sm-2 col-xl-12">
+      <div class="row">
+        <div class="col-xs-4 text-center">
+          <img
+            *ngIf="userService.profileDetailProfileImage != null"
+            src="{{ userService.profileDetailProfileImage }}"
+            class="profile-img"
+            width="80"
+            height="80"
+          />
+        </div>
+        <div class="col-xs-8">
+          <div class="profile-detail-user-name">
+            {{ userService.profileForm.UserName.Value }}
           </div>
+          <a mat-button [matMenuTriggerFor]="menu">
+            <a class="btn btn-default btn-profile-change"
+              ><div translate="change_profile"></div>
+            </a>
+          </a>
+          <mat-menu #menu="matMenu">
+            <a
+              mat-menu-item
+              [routerLink]="['/' + baseCtrl.pageLanguage + '/profile-change']"
+            >
+              <mat-icon>photo_album</mat-icon>
+              <span translate="change_profile"></span>
+            </a>
+            <a
+              mat-menu-item
+              [routerLink]="['/' + baseCtrl.pageLanguage + '/gold-member']"
+            >
+              <mat-icon>grade</mat-icon>
+              <span translate="gold_member"></span>
+            </a>
+            <a
+              mat-menu-item
+              [routerLink]="['/' + baseCtrl.pageLanguage + '/change-password']"
+            >
+              <mat-icon>lock</mat-icon>
+              <span translate="change_password"></span>
+            </a>
+          </mat-menu>
+          &nbsp;&nbsp;
+          <a
+            class="btn btn-default btn-profile-change"
+            (click)="onLogout()"
+            >
+            <i class="fa fa-lock"></i>
+          </a>
+          <p style="display: block; margin-top: 10px; font-size: 14px">
+            {{ userService.profileForm.StatusText.Value }}
+          </p>
         </div>
-        <div class="form-group">
-          <label translate="user_name"></label>
-          <input type="text" ngModel name="userName" [(ngModel)]="userService.profileForm.UserName.Value"
-                 [ngClass]="{'error-field': baseCtrl.checkField(userService.profileForm.UserName) && submitted}"
-                 class="form-control">
-          <div *ngIf="baseCtrl.checkField(userService.profileForm.UserName) && submitted"
-               class="error-required" translate="field_required">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label translate="status"></label>
-          <select class="form-control" ngModel [(ngModel)]="userService.profileForm.StatusId.Value"
-                  name="status"
-                  [ngClass]="{'error-field': baseCtrl.checkField(userService.profileForm.StatusId) && submitted}">
-            <option *ngFor="let status of userService.statusObject.Statuses.Value"
-                    value="{{status.StatusId.Value}}">{{status.StatusName.Value}}</option>
-          </select>
-          <div *ngIf="baseCtrl.checkField(userService.profileForm.StatusId) && submitted"
-               class="error-required" translate="field_required">
-          </div>
-        </div>
-        <div class="form-group">
-          <button class="btn btn-danger" translate="send" (click)="onSubmit()"></button>
-        </div>
-      </form>
+      </div>
+    </div>
+    <div class="col-sm-8 offset-sm-2">
       <div class="row">
         <div class="col-sm-12">
-          <input type="file" id="uploadedPhoto" style="display: none"
-                 (change)="readThis($event)" multiple>
-          <div class="upload-photo text-right" (click)="onOpenChoosePhotoDialog()"><i class="fa fa-plus"></i> <span
-            translate="upload_photo"></span></div>
-          <hr>
-          <p *ngIf="userService.profileForm.ProfilePhotos.Value==null" translate="please_add_photo"></p>
-          <div *ngFor="let p of userService.profileForm.ProfilePhotos.Value">
-            <div class="profile-img">
-              <img src="{{p.FileURL.Value}}" width="100" height="100">
-              <div translate="delete" (click)="deleteProfilePhoto(p)"></div>
-            </div>
+          <a
+            class="btn btn-default btn-profile-change"
+            (click)="onOpenChoosePhotoDialog()"
+            ><div translate="upload_photo"></div>
+          </a>
+          <input
+            type="file"
+            id="uploadedPhoto"
+            style="display: none"
+            (change)="readThis($event)"
+            multiple
+          />
+          <hr />
+          <p
+            *ngIf="userService.profileForm.ProfilePhotos.Value == null"
+            translate="please_add_photo"
+          ></p>
+        </div>
+        <div
+          *ngFor="let p of userService.profileForm.ProfilePhotos.Value"
+          class="col-sm-4 col-12"
+          (click)="onOpenProfilePhoto(p.FileURL.Value, p.FileId.Value)"
+        >
+          <div class="profile-list-img">
+            <img src="{{ p.FileURL.Value }}" />
           </div>
         </div>
       </div>
-      <div class="row">
-        <div  class="col-sm-12">
-          <hr>
-          <p translate="gold_user_desc" class="text-center"></p>
-          <form>
-            <div class="form-group">
-              <label translate="phone_number"></label>
-              <input type="phone_number" [(ngModel)]="userService.goldUserRequest.PhoneNumber.Value" name="phoneNumber" class="form-control"
-                    placeholder="ex: +380 98 11 22 33"
-                     [ngClass]="{'error-field': baseCtrl.checkField(userService.goldUserRequest.PhoneNumber) && submittedGoldUser}">
-              <div *ngIf="baseCtrl.checkField(userService.goldUserRequest.PhoneNumber) && submittedGoldUser"
-                   class="error-required" translate="field_required">
-              </div>
-            </div>
-            <div class="form-group">
-              <button class="btn btn-danger" translate="send" (click)="onSendGoldRequest()"></button>
-            </div>
-          </form>
-
-        </div>
-      </div>
-
-
     </div>
-  </div>
 
-
-  <div class="main-status-circle logout-button" (click)="onLogout()">
-    <div class="display-table-cell">
-      <i class="fa fa-sign-out" aria-hidden="true"></i>
-    </div>
   </div>
 </div>

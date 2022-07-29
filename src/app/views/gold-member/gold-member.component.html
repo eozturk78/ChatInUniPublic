@@ -1,0 +1,66 @@
+<div class="content" role="main">
+  <div class="col-md-6 offset-md-3 col-12">
+    <div class="row">
+      <div class="col-xs-4 text-center">
+        <img
+          *ngIf="userService.profileDetailProfileImage != null"
+          src="{{ userService.profileDetailProfileImage }}"
+          class="profile-img"
+          width="100"
+          height="100"
+        />
+      </div>
+      <div class="col-xs-8">
+        <b class="profile-detail-user-name">
+          {{ userService.profileForm.UserName.Value }}
+        </b>&nbsp;&nbsp;&nbsp;
+        <a mat-button [matMenuTriggerFor]="menu">
+          <a class="btn btn-default btn-profile-change"
+            ><div translate="change_profile"></div>
+          </a>
+        </a>
+        <mat-menu #menu="matMenu">
+          <a
+            mat-menu-item
+            [routerLink]="['/' + baseCtrl.pageLanguage + '/profile-change']"
+          >
+            <mat-icon>photo_album</mat-icon>
+            <span translate="change_profile"></span>
+          </a>
+          <a
+            mat-menu-item
+            [routerLink]="['/' + baseCtrl.pageLanguage + '/gold-member']"
+          >
+            <mat-icon>grade</mat-icon>
+            <span translate="gold_member"></span>
+          </a>
+          <a
+            mat-menu-item
+            [routerLink]="['/' + baseCtrl.pageLanguage + '/change-password']"
+          >
+            <mat-icon>lock</mat-icon>
+            <span translate="change_password"></span>
+          </a>
+        </mat-menu>
+        <br>
+        <a [routerLink]="['/'+baseCtrl.pageLanguage+'/profile']" translate="change_photo"></a>
+      </div>
+    </div>
+    <hr/>
+    <p translate="gold_user_desc" class="text-center"></p>
+    <form>
+      <div class="form-group">
+        <label translate="phone_number"></label>
+        <input type="phone_number" [(ngModel)]="userService.goldUserRequest.PhoneNumber.Value" name="phoneNumber" class="form-control"
+              placeholder="ex: +380 98 11 22 33"
+                [ngClass]="{'error-field': baseCtrl.checkField(userService.goldUserRequest.PhoneNumber) && submitted}">
+        <div *ngIf="baseCtrl.checkField(userService.goldUserRequest.PhoneNumber) && submitted"
+              class="error-required" translate="field_required">
+        </div>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-danger" translate="send" (click)="onSubmit()"></button>
+      </div>
+    </form>
+  </div>
+</div>

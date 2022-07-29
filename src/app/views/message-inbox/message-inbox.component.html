@@ -90,7 +90,7 @@
             />
           </div>
           <b>{{ ib.ChatCreatedUserName | slice: 0:10 }}</b>
-          <div>
+          <div *ngIf="ib.Messages !=null && ib.Messages.length>0">
             {{ ib.Messages![ib.Messages.length - 1].Message.substr(0, 40) }}
           </div>
         </div>

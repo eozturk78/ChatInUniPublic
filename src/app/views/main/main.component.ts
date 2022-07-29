@@ -12,10 +12,25 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
     trigger('openClose', [
       // ...
       state('open', style({
-        opacity: 1
+        left: 0
       })),
       state('closed', style({
-        opacity: 0
+        left: -450
+      })),
+      transition('open => closed', [
+        animate('0.5s')
+      ]),
+      transition('closed => open', [
+        animate('0.5s')
+      ]),
+    ]),
+    trigger('openCloseStatusIcon', [
+      // ...
+      state('open', style({
+        left: 410
+      })),
+      state('closed', style({
+        left: 60
       })),
       transition('open => closed', [
         animate('0.5s')
@@ -33,12 +48,15 @@ export class MainComponent implements OnInit {
   chosenStatus: any = null;
   isOpen = false;
   statusId = null;
+  isMobile: boolean = false;
 
   constructor(public base: BaseMethodsService, public userService: UserService, private _eref: ElementRef) {
     base.changeLanguageOnPage();
   }
 
   ngOnInit(): void {
+    if (this.base.isBrowser && window.innerWidth < 769)
+      this.isMobile = true;
     this.onGetUserList();
     this.userService.getLandingContent();
   }

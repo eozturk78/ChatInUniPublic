@@ -9,7 +9,6 @@ import {
   transition,
   animate,
 } from '@angular/animations';
-import { MdlForgotPasswordComponent } from '../modal/mdl-forgot-password/mdl-forgot-password.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MdlComplaintUserComponent } from '../modal/mdl-complaint-user/mdl-complaint-user.component';
 
@@ -69,8 +68,10 @@ export class MessageInboxComponent implements OnInit {
         IsFromLoggedUser: true,
       };
       if (this.baseCtrl.isBrowser) this.userService.socket.emit('Message', p);
+      if(this.userService.chosenInbox.Messages==null) this.userService.chosenInbox.Messages = []
       this.userService.chosenInbox.Messages.push(p);
       this.userService.chosenInbox.LastMessageDate = this.baseCtrl.now();
+
       this.userService.inbox.sort(function (o1, o2) {
         return o2.LastMessageDate ? -1 : o1.LastMessageDate ? 1 : 0;
       });
@@ -78,6 +79,7 @@ export class MessageInboxComponent implements OnInit {
         // @ts-ignore
         return new Date(val2.LastMessageDate) - new Date(val1.LastMessageDate);
       });
+      console.log(JSON.stringify(this.userService.inbox));
       this.message = null;
       this.gotoEndOfToScreen();
     }
@@ -101,9 +103,11 @@ export class MessageInboxComponent implements OnInit {
     if (this.userService.chosenInbox.UnReadMessageCount > 0) {
       this.userService.socket.emit('ReadChatMessage', {
         ChatId: ib.ChatId,
-        ChatCreatedUserName: this.userService.chosenInbox.ChatCreatedUserName
+        ChatCreatedUserName: this.userService.chosenInbox.ChatCreatedUserName,
       });
       this.userService.chosenInbox.UnReadMessageCount = 0;
+      this.userService.getMessageCount();
+
       this.gotoEndOfToScreen();
     }
   }
@@ -113,6 +117,14 @@ export class MessageInboxComponent implements OnInit {
     if (objDiv != null) {
       objDiv.scrollTop = objDiv?.scrollHeight;
     }
+    if (this.userService.chosenInbox != null && this.userService.chosenInbox.UnReadMessageCount>0) {
+      this.userService.chosenInbox.UnReadMessageCount = 0;
+      this.userService.socket.emit('ReadChatMessage', {
+        ChatId: this.userService.chosenInbox?.ChatId,
+        ChatCreatedUserName: this.userService.chosenInbox.ChatCreatedUserName,
+      });
+      this.userService.getMessageCount();
+    }
   }
 
   onDeleteChat() {
@@ -120,11 +132,6 @@ export class MessageInboxComponent implements OnInit {
       ChatId: this.userService.chosenInbox?.ChatId,
     };
     this.userService.deleteChat(params);
-    let index = this.userService.inbox.findIndex(
-      (x) => (x.ChatId = params.ChatId)
-    );
-    this.userService.inbox.splice(index, 1);
-    this.userService.chosenInbox = null;
     this.onTurnToMessageList();
   }
 

@@ -1,0 +1,28 @@
+<div class="modal-btn close-button-container" (click)="close()">
+  <mat-icon style="font-size: 20px; color: white">close</mat-icon>
+</div>
+<div
+  class="modal-btn more-button-container"
+  *ngIf="userService.userPhotoId != ''"
+>
+  <a mat-button [matMenuTriggerFor]="menu">
+
+    <mat-icon style="font-size: 20px; color: white">more_horiz</mat-icon>
+  </a>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="setMainPhoto()">
+      <mat-icon>photo_album</mat-icon>
+      <span translate="main_photo"></span>
+    </button>
+    <button mat-menu-item (click)="deletePhoto()">
+      <mat-icon>delete</mat-icon>
+      <span translate="delete"></span>
+    </button>
+  </mat-menu>
+</div>
+<div>
+  <img
+    [src]="userService.userPhoto"
+    style="width: 100%; object-fit: cover; height: 600px"
+  />
+</div>

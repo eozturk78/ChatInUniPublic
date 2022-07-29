@@ -57,6 +57,8 @@ export class UserService {
   complaintUserForm = this.requestModels.complaintUserRequest;
   // -- GoldUserRequest
   goldUserRequest = this.requestModels.phoneNumberRequest;
+  // -- ChangePassword
+  changePasswordForm = this.requestModels.changePasswordRequest;
   isSuccessGoldRequest = false;
 
   // -- socket messages list
@@ -64,8 +66,10 @@ export class UserService {
   statusList: Array<any> = [];
   chosenInbox: any;
   messageCount: number = 0;
-
   userName?: string;
+
+  userPhoto: any;
+  userPhotoId?: string = '';
 
   // -- SignUp EndPoint
   signUp(params: any) {
@@ -102,6 +106,7 @@ export class UserService {
         (resp: any) => {
           const data =
             this.serviceConnectionService.parseDataToJsonDetails(resp);
+
           this.baseCtrl.setHandleStorageData('token', data.Token);
           this.baseCtrl.setHandleStorageData('email', data.Email);
           this.baseCtrl.setHandleStorageData('userName', data.UserName);
@@ -147,10 +152,28 @@ export class UserService {
       );
   }
 
+  // -- ChangePassword EndPoint
+  changePassword(user: any) {
+    const methodUrl = this.serviceBaseUrl + Consts.changePassword;
+    this.serviceConnectionService
+      .serviceConnection(methodUrl, user, Enums.MethodType.POST)
+      .subscribe(
+        (resp: any) => {
+          this.serviceConnectionService.setEndPointResponse();
+        },
+        (error: any) => {
+          this.errorMessage.onShowErrorMessage(error);
+        }
+      );
+  }
+
+  profileDetailProfileImage = null;
   // -- GetProfile EndPoint
   getProfile() {
     const methodUrl = this.serviceBaseUrl + Consts.getProfile;
     this.profileForm.ProfilePhotos.Value = null;
+    this.profileDetailProfileImage = null;
+
     this.serviceConnectionService
       .serviceConnection(methodUrl, null, Enums.MethodType.GET)
       .subscribe(
@@ -159,6 +182,13 @@ export class UserService {
             this.serviceConnectionService.parseDataToJsonDetails(resp);
           this.baseCtrl.fillResponseToForm(this.profileForm, data);
           this.baseCtrl.fillResponseToForm(this.statusObject, data, true);
+          data.Records[0].ProfilePhotos!.forEach((data: any) => {
+            if (data.MainPhoto == 1)
+              this.profileDetailProfileImage = data.FileURL;
+          });
+          if (this.profileDetailProfileImage == null)
+            this.profileDetailProfileImage =
+              data.Records[0].ProfilePhotos![0]?.FileURL;
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -200,6 +230,8 @@ export class UserService {
           }
           // @ts-ignore
           this.profileForm.ProfilePhotos.Value.push(imageForm);
+          if (this.profileDetailProfileImage == null)
+            this.profileDetailProfileImage = imageForm.FileURL.Value;
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -217,6 +249,27 @@ export class UserService {
         (resp: any) => {
           const data =
             this.serviceConnectionService.parseDataToJsonDetails(resp);
+          this.getProfile();
+          this.bsModalRef.dismissAll();
+        },
+        (error: any) => {
+          this.errorMessage.onShowErrorMessage(error);
+        }
+      );
+  }
+
+  // -- setMainProfilePhoto EndPoint
+  setMainProfilePhoto(params: any) {
+    const methodUrl =
+      this.serviceBaseUrl + Consts.setMainProfilePhoto + '/' + params.FileId;
+    this.serviceConnectionService
+      .serviceConnection(methodUrl, params, Enums.MethodType.POST)
+      .subscribe(
+        (resp: any) => {
+          const data =
+            this.serviceConnectionService.parseDataToJsonDetails(resp);
+          this.getProfile();
+          this.bsModalRef.dismissAll();
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -256,7 +309,7 @@ export class UserService {
             if (data.ProfilePhotos != null)
               data.ProfilePhotos = JSON.parse(data.ProfilePhotos);
           });
-
+          console.log(JSON.stringify(data));
           this.statusList = data.Statuses;
           this.baseCtrl.fillResponseToForm(this.activeUsers, data, true);
         },
@@ -270,6 +323,9 @@ export class UserService {
   getUserProfileDetail(params: any) {
     const methodUrl =
       this.serviceBaseUrl + Consts.getUserProfileDetail + '/' + params.UserName;
+    this.userProfileDetail.ProfilePhotos.Value = null;
+    this.userPhotoId = '';
+    this.profileDetailProfileImage = null;
     this.serviceConnectionService
       .serviceConnection(methodUrl, null, Enums.MethodType.GET)
       .subscribe(
@@ -277,6 +333,11 @@ export class UserService {
           const data =
             this.serviceConnectionService.parseDataToJsonDetails(resp);
           this.baseCtrl.fillResponseToForm(this.userProfileDetail, data, false);
+          data.ProfilePhotos!.forEach((data: any) => {
+            if (data.MainPhoto == 1)
+              this.profileDetailProfileImage = data.FileURL;
+          });
+          if(this.profileDetailProfileImage == null) this.profileDetailProfileImage = data.ProfilePhotos![0]?.FileURL;
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -304,6 +365,7 @@ export class UserService {
   // -- GetMessageList EndPoint
   getMessageList() {
     const methodUrl = this.serviceBaseUrl + Consts.getMessageList;
+    this.chosenInbox = null;
     this.serviceConnectionService
       .serviceConnection(methodUrl, null, Enums.MethodType.GET)
       .subscribe(
@@ -311,7 +373,12 @@ export class UserService {
           const data =
             this.serviceConnectionService.parseDataToJsonDetails(resp);
           this.inbox = data.Records;
-          console.log(JSON.stringify(data.Records));
+          if (this.inbox != null) {
+            this.inbox.forEach((data)=>{
+              if(data.ChatCreatedUserName == this.userProfileDetail.UserName.Value) this.chosenInbox = data
+            })
+           if(this.chosenInbox == null) this.chosenInbox = this.inbox[0];
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -326,7 +393,14 @@ export class UserService {
     this.serviceConnectionService
       .serviceConnection(methodUrl, params, Enums.MethodType.POST)
       .subscribe(
-        (resp: any) => {},
+        (resp: any) => {
+          let index = 0;
+          this.inbox.forEach((c: any) => {
+            if (c.ChatId == params.ChatId) this.inbox.splice(index, 1);
+            index++;
+          });
+          this.chosenInbox = null;
+        },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
         }
@@ -456,6 +530,14 @@ export class UserService {
       );
   }
 
+  // -- read un read message
+  getMessageCount() {
+    this.messageCount = 0;
+    this.inbox.forEach((message: any) => {
+      this.messageCount += message.UnReadMessageCount;
+    });
+  }
+
   // -- Connect to socket
   connectToSocket(token: string) {
     if (this.baseCtrl.isBrowser) {
@@ -471,33 +553,49 @@ export class UserService {
       this.socket.emit('UpdateSocketId', { Token: token });
       this.socket.on('CreateChat', (data: any) => {
         this.messageCount++;
-        const p = {
-          ChatId: data.ChatId,
-          ChatCreatedUserName: data.FromUserName,
-          Date: data.Date,
-          LastMessageDate: data,
-          Messages: Array<any>(),
-        };
-        p.Messages.push(data);
-        this.inbox.unshift(p);
+        if (this.inbox == null) this.inbox = [];
+        let inb = this.inbox?.find((x: any) => x.ChatId == data.ChatId);
+        if (inb == null) {
+          const p = {
+            ChatId: data.ChatId,
+            ChatCreatedUserName: data.FromUserName,
+            Date: data.Date,
+            LastMessageDate: data.Date,
+            Messages: Array<any>(),
+          };
+          p.Messages.push(data);
+          if (this.inbox == null) this.inbox = [];
+          this.inbox.unshift(p);
+        } else {
+          inb.Messages.push(data);
+          inb.LastMessageDate = data.Date;
+          inb.UnReadMessageCount++;
+        }
+        this.inbox.sort((val1: any, val2: any) => {
+          return (
+            new Date(val2.LastMessageDate).getTime() -
+            new Date(val1.LastMessageDate).getTime()
+          );
+        });
         this.baseCtrl.playAudio();
       });
       this.socket.on('Message', (data: any) => {
         if (data.error == null && data.error == undefined) {
-          let inb = this.inbox.find(
-            (x: any) =>
-              x.ChatCreatedUserName == data.FromUserName ||
-              x.ChatCreatedUserName == data.ToUserName
-          );
-          inb.LastMessageDate = data.Date;
-          inb.UnReadMessageCount++;
+          let inb = this.inbox?.find((x: any) => x.ChatId == data.ChatId);
+          if (inb != null) {
+            inb.Messages = data.Messages;
+            inb.LastMessageDate = data.LastMessageDate;
+            inb.UnReadMessageCount++;
+          } else {
+            this.inbox = [];
+            this.inbox.push(data);
+          }
           this.inbox.sort((val1: any, val2: any) => {
             return (
               new Date(val2.LastMessageDate).getTime() -
               new Date(val1.LastMessageDate).getTime()
             );
           });
-          inb?.Messages?.push(data);
           this.messageCount++;
           this.baseCtrl.playAudio();
         } else {

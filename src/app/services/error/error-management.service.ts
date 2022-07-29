@@ -14,7 +14,8 @@ export class ErrorManagementService {
   public errorText = null;
 
   public onShowErrorMessage(error: any) {
-    const status = error?.error?.ErrorMessage;
+    console.log(error);
+    const status = error?.error;
     if (this.baseCtrl.isBrowser) alert(status);
   }
 

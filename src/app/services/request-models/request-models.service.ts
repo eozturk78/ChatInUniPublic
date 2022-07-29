@@ -36,11 +36,17 @@ export class RequestModelsService {
     RepeatPassword: {Value: null, IsRequired: true, IsSendRequest: false},
     Token: {Value: null, IsRequired: true, IsSendRequest: true}
   };
+  // -- ChangePassword Request
+  changePasswordRequest = {
+    OldPassword: {Value: null, IsRequired: true, IsSendRequest: true},
+    NewPassword: {Value: null, IsRequired: true, IsSendRequest: true}
+  };
   // -- ProfileForm Request
   updateProfileRequest = {
     Email: {Value: null, IsRequired: true, IsSendRequest: true},
     UserName: {Value: null, IsRequired: true, IsSendRequest: true},
     StatusId: {Value: null, IsRequired: true, IsSendRequest: true},
+    StatusText: {Value: null, IsRequired: false, IsSendRequest: false},
     ProfilePhotos: {
       Value: null,
       IsRequired: false,
@@ -168,6 +174,7 @@ export class RequestModelsService {
   fnProfilePhotosModel() {
     const params = {
       FileId: {Value: null, IsRequired: false, IsSendRequest: true},
+      MainPhoto: {Value: null, IsRequired: false, IsSendRequest: false},
       FileURL: {Value: null, IsRequired: false, IsSendRequest: false}
     };
     return params;

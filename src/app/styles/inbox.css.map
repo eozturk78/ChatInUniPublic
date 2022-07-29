@@ -1,7 +1,0 @@
-{
-"version": 3,
-"mappings": "AAAA,eAAgB;EACd,MAAM,EAAE,iBAAiB;EACzB,MAAM,EAAE,eAAe;;AAGzB,sBAAuB;EACrB,MAAM,EAAE,IAAI;EACZ,MAAM,EAAE,iBAAiB;EACzB,KAAK,EAAE,cAAc;;AAGvB,yBAA0B;EACxB,OAAO,EAAE,IAAI",
-"sources": ["inbox.scss"],
-"names": [],
-"file": "inbox.css"
-}

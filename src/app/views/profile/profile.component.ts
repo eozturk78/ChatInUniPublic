@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {UserService} from "../../services/user/user.service";
 import {BaseMethodsService} from "../../services/base/base-methods.service";
 import {Consts} from "../../models/consts/consts";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { MdlProfilePhotoComponent } from '../modal/mdl-profile-photo/mdl-profile-photo.component';
 
 @Component({
   selector: 'app-profile',
@@ -14,7 +16,8 @@ export class ProfileComponent implements OnInit {
 
   fileName: string | undefined;
 
-  constructor(public userService: UserService, public baseCtrl: BaseMethodsService) {
+  constructor(public userService: UserService, public baseCtrl: BaseMethodsService,
+    private modalService: NgbModal) {
   }
 
   ngOnInit(): void {
@@ -22,13 +25,6 @@ export class ProfileComponent implements OnInit {
     this.userService.getLandingContent();
   }
 
-  onSubmit() {
-    this.submitted = true;
-    const params = this.baseCtrl.getReadyBackendBody(this.userService.profileForm)
-    if (params != false) {
-      this.userService.updateProfile(params);
-    }
-  }
 
   onOpenChoosePhotoDialog() {
     document.getElementById('uploadedPhoto')?.click();
@@ -73,12 +69,14 @@ export class ProfileComponent implements OnInit {
     window.location.href = '/';
   }
 
-  onSendGoldRequest(){
-    this.submittedGoldUser = true;
-    const params = this.baseCtrl.getReadyBackendBody(this.userService.goldUserRequest)
-    if (params != false) {
-      this.userService.sendGoldRequest(params);
-    }
 
+  onOpenProfilePhoto(photo: string, fileId: string) {
+    this.userService.userPhoto = photo;
+    this.userService.userPhotoId = fileId;
+    this.modalService.open(MdlProfilePhotoComponent, {
+      backdrop: 'static',
+      size: 'md',
+      keyboard: true
+    });
   }
 }

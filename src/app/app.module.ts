@@ -1,3 +1,4 @@
+import { MatIconModule } from '@angular/material/icon';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -17,10 +18,9 @@ import { AlertComponentComponent } from './views/tpls/alert-component/alert-comp
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Consts } from './models/consts/consts';
 import { FooterComponent } from './views/tpls/footer/footer.component';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatIconModule } from '@angular/material/icon';
 import { MdlComplaintUserComponent } from './views/modal/mdl-complaint-user/mdl-complaint-user.component';
-
+import { MdlProfilePhotoComponent } from './views/modal/mdl-profile-photo/mdl-profile-photo.component';
+import { MatMenuModule } from '@angular/material/menu';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,6 +29,7 @@ import { MdlComplaintUserComponent } from './views/modal/mdl-complaint-user/mdl-
     MdlForgotPasswordComponent,
     FooterComponent,
     MdlComplaintUserComponent,
+    MdlProfilePhotoComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -47,6 +48,8 @@ import { MdlComplaintUserComponent } from './views/modal/mdl-complaint-user/mdl-
     NgbModule,
     ModalModule.forRoot(),
     BrowserAnimationsModule,
+    MatIconModule,
+    MatMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent],
