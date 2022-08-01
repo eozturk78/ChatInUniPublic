@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import {Component, OnInit} from '@angular/core';
 import {BaseMethodsService} from "../../services/base/base-methods.service";
 import {UserService} from "../../services/user/user.service";
@@ -10,7 +11,7 @@ import {UserService} from "../../services/user/user.service";
 export class SignUpComponent implements OnInit {
     submitted = false;
 
-    constructor(public baseCtrl: BaseMethodsService, public userService: UserService) {
+    constructor(public baseCtrl: BaseMethodsService, public userService: UserService, private router: Router) {
         baseCtrl.changeLanguageOnPage();
     }
 
@@ -25,5 +26,9 @@ export class SignUpComponent implements OnInit {
         if (params != false) {
             this.userService.signUp(params);
         }
+    }
+
+    onGotoPrivacyPolicy(){
+      this.router.navigate(['/'+this.baseCtrl.pageLanguage +'/privacy-policy'])
     }
 }

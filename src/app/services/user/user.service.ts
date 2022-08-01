@@ -66,7 +66,8 @@ export class UserService {
   statusList: Array<any> = [];
   chosenInbox: any;
   messageCount: number = 0;
-  userName?: string;
+  userName: string | undefined;
+  sendMessageUserName: string | undefined;
 
   userPhoto: any;
   userPhotoId?: string = '';
@@ -78,18 +79,22 @@ export class UserService {
       .serviceConnection(methodUrl, params, Enums.MethodType.POST)
       .subscribe(
         (resp: any) => {
-          const data = this.serviceConnectionService.parseDataToJsonList(resp);
-          if (data != null) {
-            this.baseCtrl.setHandleStorageData('token', data[0].Token);
-            this.baseCtrl.setHandleStorageData('email', data[0].Email);
-            this.baseCtrl.setHandleStorageData('userName', data[0].UserName);
-            this.userName = data[0].UserName;
-            this.socket.emit('UpdateSocketId', {
-              Token: data[0].Token,
-            });
-            this.router.navigate([`${this.baseCtrl.pageLanguage}/profile`]);
+          if (resp.IsSuccess) {
+            const data =
+              this.serviceConnectionService.parseDataToJsonList(resp);
+            if (data != null) {
+              this.baseCtrl.setHandleStorageData('token', data[0].Token);
+              this.baseCtrl.setHandleStorageData('email', data[0].Email);
+              this.baseCtrl.setHandleStorageData('userName', data[0].UserName);
+              this.userName = data[0].UserName;
+              this.socket.emit('UpdateSocketId', {
+                Token: data[0].Token,
+              });
+              this.router.navigate([`${this.baseCtrl.pageLanguage}/profile`]);
+            }
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
           }
-          //
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -104,15 +109,21 @@ export class UserService {
       .serviceConnection(methodUrl, params, Enums.MethodType.POST)
       .subscribe(
         (resp: any) => {
-          const data =
-            this.serviceConnectionService.parseDataToJsonDetails(resp);
+          if (resp.IsSuccess) {
+            const data =
+              this.serviceConnectionService.parseDataToJsonDetails(resp);
 
-          this.baseCtrl.setHandleStorageData('token', data.Token);
-          this.baseCtrl.setHandleStorageData('email', data.Email);
-          this.baseCtrl.setHandleStorageData('userName', data.UserName);
-          this.userName = data.UserName;
-          this.socket.emit('UpdateSocketId', { Token: data.Token });
-          this.router.navigate([`${this.baseCtrl.pageLanguage}/active-users`]);
+            this.baseCtrl.setHandleStorageData('token', data.Token);
+            this.baseCtrl.setHandleStorageData('email', data.Email);
+            this.baseCtrl.setHandleStorageData('userName', data.UserName);
+            this.userName = data.UserName;
+            this.socket.emit('UpdateSocketId', { Token: data.Token });
+            this.router.navigate([
+              `${this.baseCtrl.pageLanguage}/active-users`,
+            ]);
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -127,7 +138,11 @@ export class UserService {
       .serviceConnection(methodUrl, params, Enums.MethodType.POST)
       .subscribe(
         (resp: any) => {
-          this.setForgotPasswordSuccess = true;
+          if (resp.IsSuccess) {
+            this.setForgotPasswordSuccess = true;
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.setForgotPasswordSuccess = false;
@@ -143,8 +158,12 @@ export class UserService {
       .serviceConnection(methodUrl, user, Enums.MethodType.POST)
       .subscribe(
         (resp: any) => {
-          // @ts-ignore
-          window.location = `${this.baseCtrl.pageLanguage}/login`;
+          if (resp.IsSuccess) {
+            // @ts-ignore
+            window.location = `${this.baseCtrl.pageLanguage}/login`;
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -159,7 +178,11 @@ export class UserService {
       .serviceConnection(methodUrl, user, Enums.MethodType.POST)
       .subscribe(
         (resp: any) => {
-          this.serviceConnectionService.setEndPointResponse();
+          if (resp.IsSuccess) {
+            this.serviceConnectionService.setEndPointResponse();
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -178,17 +201,21 @@ export class UserService {
       .serviceConnection(methodUrl, null, Enums.MethodType.GET)
       .subscribe(
         (resp: any) => {
-          const data =
-            this.serviceConnectionService.parseDataToJsonDetails(resp);
-          this.baseCtrl.fillResponseToForm(this.profileForm, data);
-          this.baseCtrl.fillResponseToForm(this.statusObject, data, true);
-          data.Records[0].ProfilePhotos!.forEach((data: any) => {
-            if (data.MainPhoto == 1)
-              this.profileDetailProfileImage = data.FileURL;
-          });
-          if (this.profileDetailProfileImage == null)
-            this.profileDetailProfileImage =
-              data.Records[0].ProfilePhotos![0]?.FileURL;
+          if (resp.IsSuccess) {
+            const data =
+              this.serviceConnectionService.parseDataToJsonDetails(resp);
+            this.baseCtrl.fillResponseToForm(this.profileForm, data);
+            this.baseCtrl.fillResponseToForm(this.statusObject, data, true);
+            data.Records[0].ProfilePhotos!.forEach((data: any) => {
+              if (data.MainPhoto == 1)
+                this.profileDetailProfileImage = data.FileURL;
+            });
+            if (this.profileDetailProfileImage == null)
+              this.profileDetailProfileImage =
+                data.Records[0].ProfilePhotos![0]?.FileURL;
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -203,9 +230,13 @@ export class UserService {
       .serviceConnection(methodUrl, params, Enums.MethodType.POST)
       .subscribe(
         (resp: any) => {
-          const data =
-            this.serviceConnectionService.parseDataToJsonDetails(resp);
-          this.serviceConnectionService.setEndPointResponse();
+          if (resp.IsSuccess) {
+            const data =
+              this.serviceConnectionService.parseDataToJsonDetails(resp);
+            this.serviceConnectionService.setEndPointResponse();
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -220,18 +251,22 @@ export class UserService {
       .serviceConnection(methodUrl, params, Enums.MethodType.POST)
       .subscribe(
         (resp: any) => {
-          const data =
-            this.serviceConnectionService.parseDataToJsonDetails(resp);
-          const imageForm = this.requestModels.fnProfilePhotosModel();
-          this.baseCtrl.fillResponseToForm(imageForm, data);
-          if (this.profileForm.ProfilePhotos.Value == null) {
+          if (resp.IsSuccess) {
+            const data =
+              this.serviceConnectionService.parseDataToJsonDetails(resp);
+            const imageForm = this.requestModels.fnProfilePhotosModel();
+            this.baseCtrl.fillResponseToForm(imageForm, data);
+            if (this.profileForm.ProfilePhotos.Value == null) {
+              // @ts-ignore
+              this.profileForm.ProfilePhotos.Value = [];
+            }
             // @ts-ignore
-            this.profileForm.ProfilePhotos.Value = [];
+            this.profileForm.ProfilePhotos.Value.push(imageForm);
+            if (this.profileDetailProfileImage == null)
+              this.profileDetailProfileImage = imageForm.FileURL.Value;
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
           }
-          // @ts-ignore
-          this.profileForm.ProfilePhotos.Value.push(imageForm);
-          if (this.profileDetailProfileImage == null)
-            this.profileDetailProfileImage = imageForm.FileURL.Value;
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -247,10 +282,14 @@ export class UserService {
       .serviceConnection(methodUrl, params, Enums.MethodType.POST)
       .subscribe(
         (resp: any) => {
-          const data =
-            this.serviceConnectionService.parseDataToJsonDetails(resp);
-          this.getProfile();
-          this.bsModalRef.dismissAll();
+          if (resp.IsSuccess) {
+            const data =
+              this.serviceConnectionService.parseDataToJsonDetails(resp);
+            this.getProfile();
+            this.bsModalRef.dismissAll();
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -266,10 +305,14 @@ export class UserService {
       .serviceConnection(methodUrl, params, Enums.MethodType.POST)
       .subscribe(
         (resp: any) => {
-          const data =
-            this.serviceConnectionService.parseDataToJsonDetails(resp);
-          this.getProfile();
-          this.bsModalRef.dismissAll();
+          if (resp.IsSuccess) {
+            const data =
+              this.serviceConnectionService.parseDataToJsonDetails(resp);
+            this.getProfile();
+            this.bsModalRef.dismissAll();
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -284,9 +327,13 @@ export class UserService {
       .serviceConnection(methodUrl, null, Enums.MethodType.GET)
       .subscribe(
         (resp: any) => {
-          const data =
-            this.serviceConnectionService.parseDataToJsonDetails(resp);
-          this.baseCtrl.fillResponseToForm(this.statusObject, data, true);
+          if (resp.IsSuccess) {
+            const data =
+              this.serviceConnectionService.parseDataToJsonDetails(resp);
+            this.baseCtrl.fillResponseToForm(this.statusObject, data, true);
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -303,15 +350,18 @@ export class UserService {
       .serviceConnection(methodUrl, null, Enums.MethodType.GET)
       .subscribe(
         (resp: any) => {
-          const data =
-            this.serviceConnectionService.parseDataToJsonDetails(resp);
-          data.Records?.forEach((data: any) => {
-            if (data.ProfilePhotos != null)
-              data.ProfilePhotos = JSON.parse(data.ProfilePhotos);
-          });
-          console.log(JSON.stringify(data));
-          this.statusList = data.Statuses;
-          this.baseCtrl.fillResponseToForm(this.activeUsers, data, true);
+          if (resp.IsSuccess) {
+            const data =
+              this.serviceConnectionService.parseDataToJsonDetails(resp);
+            data.Records?.forEach((data: any) => {
+              if (data.ProfilePhotos != null)
+                data.ProfilePhotos = JSON.parse(data.ProfilePhotos);
+            });
+            this.statusList = data.Statuses;
+            this.baseCtrl.fillResponseToForm(this.activeUsers, data, true);
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -330,14 +380,23 @@ export class UserService {
       .serviceConnection(methodUrl, null, Enums.MethodType.GET)
       .subscribe(
         (resp: any) => {
-          const data =
-            this.serviceConnectionService.parseDataToJsonDetails(resp);
-          this.baseCtrl.fillResponseToForm(this.userProfileDetail, data, false);
-          data.ProfilePhotos!.forEach((data: any) => {
-            if (data.MainPhoto == 1)
-              this.profileDetailProfileImage = data.FileURL;
-          });
-          if(this.profileDetailProfileImage == null) this.profileDetailProfileImage = data.ProfilePhotos![0]?.FileURL;
+          if (resp.IsSuccess) {
+            const data =
+              this.serviceConnectionService.parseDataToJsonDetails(resp);
+            this.baseCtrl.fillResponseToForm(
+              this.userProfileDetail,
+              data,
+              false
+            );
+            data.ProfilePhotos!.forEach((data: any) => {
+              if (data.MainPhoto == 1)
+                this.profileDetailProfileImage = data.FileURL;
+            });
+            if (this.profileDetailProfileImage == null)
+              this.profileDetailProfileImage = data.ProfilePhotos![0]?.FileURL;
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -352,9 +411,13 @@ export class UserService {
       .serviceConnection(methodUrl, params, Enums.MethodType.POST)
       .subscribe(
         (resp: any) => {
-          const data =
-            this.serviceConnectionService.parseDataToJsonDetails(resp);
-          this.baseCtrl.setHandleStorageData('token', data.Token);
+          if (resp.IsSuccess) {
+            const data =
+              this.serviceConnectionService.parseDataToJsonDetails(resp);
+            this.baseCtrl.setHandleStorageData('token', data.Token);
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -370,14 +433,19 @@ export class UserService {
       .serviceConnection(methodUrl, null, Enums.MethodType.GET)
       .subscribe(
         (resp: any) => {
-          const data =
-            this.serviceConnectionService.parseDataToJsonDetails(resp);
-          this.inbox = data.Records;
-          if (this.inbox != null) {
-            this.inbox.forEach((data)=>{
-              if(data.ChatCreatedUserName == this.userProfileDetail.UserName.Value) this.chosenInbox = data
-            })
-           if(this.chosenInbox == null) this.chosenInbox = this.inbox[0];
+          if (resp.IsSuccess) {
+            const data =
+              this.serviceConnectionService.parseDataToJsonDetails(resp);
+            this.inbox = data.Records;
+            if (this.inbox != null) {
+              this.inbox.forEach((data) => {
+                if (data.ChatCreatedUserName == this.sendMessageUserName)
+                  this.chosenInbox = data;
+              });
+            }
+            this.sendMessageUserName = undefined;
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
           }
         },
         (error: any) => {
@@ -394,12 +462,16 @@ export class UserService {
       .serviceConnection(methodUrl, params, Enums.MethodType.POST)
       .subscribe(
         (resp: any) => {
-          let index = 0;
-          this.inbox.forEach((c: any) => {
-            if (c.ChatId == params.ChatId) this.inbox.splice(index, 1);
-            index++;
-          });
-          this.chosenInbox = null;
+          if (resp.IsSuccess) {
+            let index = 0;
+            this.inbox.forEach((c: any) => {
+              if (c.ChatId == params.ChatId) this.inbox.splice(index, 1);
+              index++;
+            });
+            this.chosenInbox = null;
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -413,7 +485,11 @@ export class UserService {
     this.serviceConnectionService
       .serviceConnection(methodUrl, params, Enums.MethodType.POST)
       .subscribe(
-        (resp: any) => {},
+        (resp: any) => {
+          if (!resp.IsSuccess) {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
+        },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
         }
@@ -427,14 +503,18 @@ export class UserService {
       .serviceConnection(methodUrl, params, Enums.MethodType.POST)
       .subscribe(
         (resp: any) => {
-          const params = {
-            BlockedUserName: this.chosenInbox?.ChatCreatedUserName,
-            ChatId: this.chosenInbox?.ChatId,
-          };
-          this.blockUserByUser(params);
-          let index = this.inbox.findIndex((x) => x.ChatId == params.ChatId);
-          this.inbox.splice(index, 1);
-          this.bsModalRef.dismissAll();
+          if (resp.IsSuccess) {
+            const params = {
+              BlockedUserName: this.chosenInbox?.ChatCreatedUserName,
+              ChatId: this.chosenInbox?.ChatId,
+            };
+            this.blockUserByUser(params);
+            let index = this.inbox.findIndex((x) => x.ChatId == params.ChatId);
+            this.inbox.splice(index, 1);
+            this.bsModalRef.dismissAll();
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -448,8 +528,12 @@ export class UserService {
       .serviceConnection(methodUrl, params, Enums.MethodType.POST)
       .subscribe(
         (resp: any) => {
-          this.goldUserRequest.PhoneNumber.Value = null;
-          this.serviceConnectionService.setEndPointResponse();
+          if (resp.IsSuccess) {
+            this.goldUserRequest.PhoneNumber.Value = null;
+            this.serviceConnectionService.setEndPointResponse();
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -464,9 +548,13 @@ export class UserService {
       .serviceConnection(methodUrl, null, Enums.MethodType.GET)
       .subscribe(
         (resp: any) => {
-          const data =
-            this.serviceConnectionService.parseDataToJsonDetails(resp);
-          this.baseCtrl.fillResponseToForm(this.blogObject, data, true);
+          if (resp.IsSuccess) {
+            const data =
+              this.serviceConnectionService.parseDataToJsonDetails(resp);
+            this.baseCtrl.fillResponseToForm(this.blogObject, data, true);
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -482,20 +570,24 @@ export class UserService {
       .serviceConnection(methodUrl, params, Enums.MethodType.GET)
       .subscribe(
         (resp: any) => {
-          const data =
-            this.serviceConnectionService.parseDataToJsonDetails(resp);
-          this.baseCtrl.fillResponseToForm(this.blogDetailObject, data, false);
-          this.pageTitle.setTitle(
-            'ChatInUni! ' + this.blogDetailObject.Title.Value
-          );
-          this.blogDetailObject?.KeyWords?.Value?.forEach((keyWord: any) => {
-            this.metaTagService.addTags([
-              {
-                name: keyWord?.Name.Value,
-                content: keyWord?.Description.Value,
-              },
-            ]);
-          });
+          if (resp.IsSuccess) {
+            const data =
+              this.serviceConnectionService.parseDataToJsonDetails(resp);
+            this.baseCtrl.fillResponseToForm(this.blogDetailObject, data, false);
+            this.pageTitle.setTitle(
+              'ChatInUni! ' + this.blogDetailObject.Title.Value
+            );
+            this.blogDetailObject?.KeyWords?.Value?.forEach((keyWord: any) => {
+              this.metaTagService.addTags([
+                {
+                  name: keyWord?.Name.Value,
+                  content: keyWord?.Description.Value,
+                },
+              ]);
+            });
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);
@@ -510,19 +602,23 @@ export class UserService {
       .serviceConnection(methodUrl, null, Enums.MethodType.GET)
       .subscribe(
         (resp: any) => {
-          const data =
-            this.serviceConnectionService.parseDataToJsonDetails(resp);
-          this.pageTitle.setTitle('ChatInUni! ' + data.Records[0].MetaTitle);
-          // @ts-ignore
-          this.metaTagService.addTags(
+          if (resp.IsSuccess) {
+            const data =
+              this.serviceConnectionService.parseDataToJsonDetails(resp);
+            this.pageTitle.setTitle('ChatInUni! ' + data.Records[0].MetaTitle);
             // @ts-ignore
-            [{ name: 'keywords', content: data.Records[0].MetaKeywords }]
-          );
-          // @ts-ignore
-          this.metaTagService.addTags(
+            this.metaTagService.addTags(
+              // @ts-ignore
+              [{ name: 'keywords', content: data.Records[0].MetaKeywords }]
+            );
             // @ts-ignore
-            [{ name: 'description', content: data.Records[0].MetaDescription }]
-          );
+            this.metaTagService.addTags(
+              // @ts-ignore
+              [{ name: 'description', content: data.Records[0].MetaDescription }]
+            );
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
         },
         (error: any) => {
           this.errorMessage.onShowErrorMessage(error);

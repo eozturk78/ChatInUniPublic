@@ -1,3 +1,4 @@
+import { BaseMethodsService } from './../../services/base/base-methods.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PrivacyPolicyComponent implements OnInit {
 
-  constructor() { }
+  constructor(public base: BaseMethodsService) { }
 
   ngOnInit(): void {
   }

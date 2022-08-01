@@ -31,7 +31,7 @@ export class UserProfileDetailComponent implements OnInit {
   onSendMessage() {
       const p = {
         Message: this.message,
-        ToUserName: this.userService.userProfileDetail.UserName.Value,
+        ToUserName: this.userService.userProfileDetail.UserName.Value || undefined,
         Lang: this.baseCtrl.getHandleStorageData("lang"),
         Token: this.baseCtrl.getHandleStorageData("token")
       };
@@ -39,6 +39,7 @@ export class UserProfileDetailComponent implements OnInit {
       if (this.baseCtrl.isBrowser) {
         this.userService.socket.emit("CreateChat", p);
         this.message = "";
+        this.userService.sendMessageUserName = p.ToUserName;
         this.router.navigate(['/' + this.baseCtrl.pageLanguage + '/message-inbox'])
       }
   }
