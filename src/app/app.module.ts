@@ -21,6 +21,11 @@ import { FooterComponent } from './views/tpls/footer/footer.component';
 import { MdlComplaintUserComponent } from './views/modal/mdl-complaint-user/mdl-complaint-user.component';
 import { MdlProfilePhotoComponent } from './views/modal/mdl-profile-photo/mdl-profile-photo.component';
 import { MatMenuModule } from '@angular/material/menu';
+import { AngularFireModule } from "@angular/fire/compat";
+import { AngularFireAuthModule } from "@angular/fire/compat/auth";
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+
+import {environment} from './models/consts/enviroment';
 @NgModule({
   declarations: [
     AppComponent,
@@ -29,7 +34,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MdlForgotPasswordComponent,
     FooterComponent,
     MdlComplaintUserComponent,
-    MdlProfilePhotoComponent
+    MdlProfilePhotoComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -49,7 +54,10 @@ import { MatMenuModule } from '@angular/material/menu';
     ModalModule.forRoot(),
     BrowserAnimationsModule,
     MatIconModule,
-    MatMenuModule
+    MatMenuModule,
+    AngularFireAuthModule,
+    AngularFireStorageModule,
+    AngularFireModule.initializeApp(environment.firebase)
   ],
   providers: [],
   bootstrap: [AppComponent],

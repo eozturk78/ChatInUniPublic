@@ -1,5 +1,5 @@
 <div class="content" role="main">
-  <a (click)="onShuffle()" style="cursor: pointer" translate="shuffle"></a><br><br>
+  <a (click)="onShuffle()" style="cursor: pointer" translate="shuffle"></a>&nbsp;&nbsp;&nbsp;<b translate="active_users"></b><br><br>
   <div *ngFor="let act of userService.activeUsers.Records.Value">
     <a [routerLink]="['/'+base.pageLanguage+'/user-profile-detail/' +act.UserName.Value]" >
       <div class="profile-img">

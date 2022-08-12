@@ -33,6 +33,36 @@ import { MdlComplaintUserComponent } from '../modal/mdl-complaint-user/mdl-compl
       transition('left => right', [animate('0.2s')]),
       transition('right => left', [animate('0.2s')]),
     ]),
+    trigger('openClose', [
+      // ...
+      state('open', style({
+        left: 0
+      })),
+      state('closed', style({
+        left: -450
+      })),
+      transition('open => closed', [
+        animate('0.5s')
+      ]),
+      transition('closed => open', [
+        animate('0.5s')
+      ]),
+    ]),
+    trigger('openCloseStatusIcon', [
+      // ...
+      state('open', style({
+        left: 410
+      })),
+      state('closed', style({
+        left: 60
+      })),
+      transition('open => closed', [
+        animate('0.5s')
+      ]),
+      transition('closed => open', [
+        animate('0.5s')
+      ]),
+    ]),
   ],
 })
 export class MessageInboxComponent implements OnInit {
@@ -43,7 +73,7 @@ export class MessageInboxComponent implements OnInit {
   someExpression: boolean = false;
   @ViewChild('chatSender') chatSender: any;
   @ViewChild('chatMessageContainer') chatMessageContainer: any;
-
+  isOpen = false;
   constructor(
     public userService: UserService,
     private baseCtrl: BaseMethodsService,
@@ -55,6 +85,7 @@ export class MessageInboxComponent implements OnInit {
     if (this.baseCtrl.isBrowser && window.innerWidth < 769)
       this.isMobile = true;
     this.userService.getMessageList();
+    this.userService.getLanguageList();
     this.userService.getLandingContent();
   }
 
@@ -174,5 +205,19 @@ export class MessageInboxComponent implements OnInit {
 
   animationDone() {
     if (!this.open) this.userService.chosenInbox = null;
+  }
+
+  onChooseTranslateLanguage(language: any){
+    this.onOpenLanguageBox();
+    this.userService.updateUserChatLanguage(language);
+  }
+  onOpenLanguageBox(){
+    this.isOpen = !this.isOpen;
+  }
+  translateChat(){
+    const p = {
+      ChatId: this.userService.chosenInbox.ChatId
+    }
+    this.userService.translateChat(p);
   }
 }

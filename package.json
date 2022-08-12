@@ -22,6 +22,7 @@
     "@angular/common": "^14.0.3",
     "@angular/compiler": "^14.0.3",
     "@angular/core": "^14.0.3",
+    "@angular/fire": "^7.4.1",
     "@angular/forms": "^14.0.3",
     "@angular/localize": "^14.0.3",
     "@angular/material": "^14.0.3",
@@ -36,6 +37,7 @@
     "autoprefixer": "10.4.5",
     "bootstrap": "^4.5.0",
     "express": "^4.15.2",
+    "firebase": "^9.9.2",
     "ngb-modal": "0.0.4",
     "ngx-bootstrap-modal": "^2.0.1",
     "ngx-socketio2": "^1.0.0",
@@ -61,5 +63,17 @@
     "sass": "~1.32.0",
     "typescript": "~4.6.4",
     "vuetify": "^2.5.1"
-  }
+  },
+  "description": "This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.1.",
+  "main": "karma.conf.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://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@github.com/eozturk78/ChatInUniPublic.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eozturk78/ChatInUniPublic/issues"
+  },
+  "homepage": "https://github.com/eozturk78/ChatInUniPublic#readme"
 }

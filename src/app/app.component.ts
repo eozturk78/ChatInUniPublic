@@ -6,6 +6,8 @@ import {BehaviorSubject} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {io} from "socket.io-client";
 import {Consts} from "./models/consts/consts";
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
 
 @Component({
   selector: 'app-root',
@@ -33,7 +35,9 @@ export class AppComponent implements AfterViewInit{
       this.userService.getPublicToken(p);
       let token = this.baseCtrl.getHandleStorageData('token') || "";
       this.userService.connectToSocket(token);
+      this.userService.requestPermission();
     }
+    this.userService.receiveMessage();
   }
 
   // @ts-ignore

@@ -141,17 +141,19 @@ export class BaseMethodsService {
   }
 
   setLanguage(language: string) {
-    this.pageLanguage = language != "" && language != null ? language : "en";
+    console.log(language);
+    language = language?.substring(0,2);
+    this.pageLanguage = language != "" && language != null ? language : "uk";
     let urlLanguage = "";
     if (language == 'tr') {
       urlLanguage = 'tr-TR';
       this.pageLanguage = 'tr';
-    } else if (language == 'ua' || language == "uk") {
-      urlLanguage = 'uk-UA';
-      this.pageLanguage = 'ua';
-    } else {
+    } else  if (language == 'en') {
       urlLanguage = 'en-US';
       this.pageLanguage = 'en';
+    }  else {
+      urlLanguage = 'uk-UA';
+      this.pageLanguage = 'ua';
     }
     this.document.documentElement.lang = language;
     this.setHandleStorageData("lang", urlLanguage);

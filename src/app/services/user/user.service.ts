@@ -1,18 +1,14 @@
 import { Injectable } from '@angular/core';
-import {
-  RequestModelsService,
-  Status,
-} from '../request-models/request-models.service';
+import { RequestModelsService } from '../request-models/request-models.service';
 import { Consts } from '../../models/consts/consts';
 import { Enums } from '../../models/enums/enums';
 import { ServiceConnectionsService } from '../service-connections.service';
 import { ErrorManagementService } from '../error/error-management.service';
 import { Router } from '@angular/router';
 import { BaseMethodsService } from '../base/base-methods.service';
-import { tap } from 'rxjs/operators';
 import { Meta, Title } from '@angular/platform-browser';
-import { io } from 'socket.io-client';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +24,8 @@ export class UserService {
     private baseCtrl: BaseMethodsService,
     private pageTitle: Title,
     private metaTagService: Meta,
-    public bsModalRef: NgbModal
+    public bsModalRef: NgbModal,
+    private afm: AngularFireMessaging
   ) {}
 
   serviceBaseUrl = Consts.protocol + Consts.apiPath + Consts.userService;
@@ -69,6 +66,7 @@ export class UserService {
   userName: string | undefined;
   sendMessageUserName: string | undefined;
 
+  languageList: Array<any> = [];
   userPhoto: any;
   userPhotoId?: string = '';
 
@@ -89,6 +87,8 @@ export class UserService {
               this.userName = data[0].UserName;
               this.socket.emit('UpdateSocketId', {
                 Token: data[0].Token,
+                FirebaseToken:
+                  this.baseCtrl.getHandleStorageData('firebaseToken'),
               });
               this.router.navigate([`${this.baseCtrl.pageLanguage}/profile`]);
             }
@@ -117,7 +117,12 @@ export class UserService {
             this.baseCtrl.setHandleStorageData('email', data.Email);
             this.baseCtrl.setHandleStorageData('userName', data.UserName);
             this.userName = data.UserName;
-            this.socket.emit('UpdateSocketId', { Token: data.Token });
+            this.socket.emit('UpdateSocketId', {
+              Token: data.Token,
+              FirebaseToken:
+                this.baseCtrl.getHandleStorageData('firebaseToken'),
+            });
+
             this.router.navigate([
               `${this.baseCtrl.pageLanguage}/active-users`,
             ]);
@@ -573,7 +578,11 @@ export class UserService {
           if (resp.IsSuccess) {
             const data =
               this.serviceConnectionService.parseDataToJsonDetails(resp);
-            this.baseCtrl.fillResponseToForm(this.blogDetailObject, data, false);
+            this.baseCtrl.fillResponseToForm(
+              this.blogDetailObject,
+              data,
+              false
+            );
             this.pageTitle.setTitle(
               'ChatInUni! ' + this.blogDetailObject.Title.Value
             );
@@ -614,7 +623,12 @@ export class UserService {
             // @ts-ignore
             this.metaTagService.addTags(
               // @ts-ignore
-              [{ name: 'description', content: data.Records[0].MetaDescription }]
+              [
+                {
+                  name: 'description',
+                  content: data.Records[0].MetaDescription,
+                },
+              ]
             );
           } else {
             this.errorMessage.onShowErrorMessage(resp);
@@ -625,6 +639,69 @@ export class UserService {
         }
       );
   }
+
+  // -- GetLanguageList EndPoint
+  getLanguageList() {
+    const methodUrl = this.serviceBaseUrl + Consts.getPublicLanguageList;
+    this.serviceConnectionService
+      .serviceConnection(methodUrl, null, Enums.MethodType.GET)
+      .subscribe(
+        (resp: any) => {
+          if (resp.IsSuccess) {
+            const data =
+              this.serviceConnectionService.parseDataToJsonDetails(resp);
+            this.languageList = data.Records;
+          } else {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
+        },
+        (error: any) => {
+          this.errorMessage.onShowErrorMessage(error);
+        }
+      );
+  }
+
+
+  // -- UpdateUserChatLanguage EndPoint
+  updateUserChatLanguage(params: any) {
+    const methodUrl = this.serviceBaseUrl + Consts.updateUserChatLanguage+'/'+params.LanguageId;
+    this.serviceConnectionService
+      .serviceConnection(methodUrl, params, Enums.MethodType.POST)
+      .subscribe(
+        (resp: any) => {
+          console.log(JSON.stringify(resp));
+          if (!resp.IsSuccess) {
+            this.errorMessage.onShowErrorMessage(resp);
+          }
+        },
+        (error: any) => {
+          this.errorMessage.onShowErrorMessage(error);
+        }
+      );
+  }
+  // -- translateChat EndPoint
+  translateChat(params: any) {
+    const methodUrl = this.serviceBaseUrl + Consts.translateChat+'/'+params.ChatId;
+    this.serviceConnectionService
+      .serviceConnection(methodUrl, params, Enums.MethodType.POST)
+      .subscribe(
+        (resp: any) => {
+          console.log(JSON.stringify(resp));
+          if (!resp.IsSuccess) {
+            this.errorMessage.onShowErrorMessage(resp);
+          }else{
+            const data =
+              this.serviceConnectionService.parseDataToJsonDetails(resp);
+              console.log(data);
+            this.chosenInbox = data
+          }
+        },
+        (error: any) => {
+          this.errorMessage.onShowErrorMessage(error);
+        }
+      );
+  }
+
 
   // -- read un read message
   getMessageCount() {
@@ -646,7 +723,10 @@ export class UserService {
   // -- Update User SocketId
   fnUpdateSocketId(token: string) {
     if (this.baseCtrl.isBrowser) {
-      this.socket.emit('UpdateSocketId', { Token: token });
+      this.socket.emit('UpdateSocketId', {
+        Token: token,
+        FirebaseToken: this.baseCtrl.getHandleStorageData('firebaseToken'),
+      });
       this.socket.on('CreateChat', (data: any) => {
         this.messageCount++;
         if (this.inbox == null) this.inbox = [];
@@ -699,5 +779,27 @@ export class UserService {
         }
       });
     }
+  }
+
+  requestPermission() {
+    this.afm.requestToken.subscribe(
+      (token: any) => {
+        console.log(token);
+        this.baseCtrl.setHandleStorageData('firebaseToken', token);
+        this.socket.emit('UpdateSocketId', {
+          Token: this.baseCtrl.getHandleStorageData('token'),
+          FirebaseToken: this.baseCtrl.getHandleStorageData('firebaseToken'),
+        });
+      },
+      (err: any) => {
+        console.error('Unable to get permission to notify.', err);
+      }
+    );
+  }
+
+  receiveMessage() {
+    this.afm.messages.subscribe((payload) => {
+      console.log('new message received. ', payload);
+    });
   }
 }

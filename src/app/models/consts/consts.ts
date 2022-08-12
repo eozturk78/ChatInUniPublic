@@ -30,4 +30,9 @@ export class Consts {
   public static blockUserByUser = 'BlockUserByUser';
   public static complaintUser = 'ComplaintUser';
   public static sendGoldRequest = 'SendGoldRequest';
+  public static getPublicLanguageList = 'GetPublicLanguageList';
+  public static updateUserChatLanguage = 'UpdateUserChatLanguage';
+  public static translateChat = 'TranslateChat';
+
+
 }
